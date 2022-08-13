@@ -3,7 +3,7 @@
 /**
  * @author Ericson S. Weah  <ericson.weah@gmail.com> <https://github.com/eweah>  <+1.385.204.5167>
  *
- * @module MongoTransform
+ * @module Model
  * @kind class
  *
  * @extends Transform
@@ -12,12 +12,12 @@
  * @requires createWriteStream
  * @requires promises
  *
- * @classdesc MongoTransform class
+ * @classdesc Model class
  */
 
 const { createReadStream, createWriteStream, promises } = require("fs");
 
-class MongoTransform extends require("./base") {
+class Model extends require("../base"){
   constructor(options = {}) {
     super({ objectMode: true, encoding: "utf-8", autoDestroy: true });
 
@@ -26,23 +26,18 @@ class MongoTransform extends require("./base") {
     });
 
     // auto bind methods
-    this.autobind(MongoTransform);
+    this.autobind(Model);
     // auto invoke methods
-    this.autoinvoker(MongoTransform);
+    this.autoinvoker(Model);
     // add other classes method if methods do not already exist. Argument order matters!
     // this.methodizer(..classList);
     //Set the maximum number of listeners to infinity
     this.setMaxListeners(Infinity);
   }
 
-  mongoTransformCommands(){
-    return {};
+  list(){
+    console.log('list all models');
   }
-
-  mongoTransform(){
-    console.log('mongo Transform');
-  }
-
 
   addDefault() {
     if (!this.createWriteStream) this.createWriteStream = createWriteStream;
@@ -65,7 +60,6 @@ class MongoTransform extends require("./base") {
     return ["addDefault"];
   }
 
- 
 }
 
-module.exports = MongoTransform;
+module.exports = Model;

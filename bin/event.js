@@ -17,7 +17,7 @@
 
 const { createReadStream, createWriteStream, promises } = require("fs");
 
-class Event extends require("./Base"){
+class Event extends require("./base"){
   constructor(options = {}) {
     super({ objectMode: true, encoding: "utf-8", autoDestroy: true });
 

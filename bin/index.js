@@ -1,10 +1,12 @@
 #!/usr/bin/env node 
 // const MongoTransform = require('../');
 const Man = require('./man');
-const Method = require('./method');
+const Method = require('./method/method');
 const Default = require('./default');
 const Event = require('./event');
 const MongoTransform = require('./MongoTransform');
+const Model = require('./model');
+const Database = require('./db');
 
 var cmd1 = process.argv[2];
 var cmd2 = process.argv[3];
@@ -31,6 +33,12 @@ switch(cmd1){
         break;
     case 'events':
          new Event({command: cmd1}).events();
+        break;
+    case 'model':
+        new Model({command: cmd1}).list();
+        break;
+    case 'database':
+        new Database({command: cmd1}).database();
         break;
     case 'class':
         new MongoTransform({command: cmd1}).mongoTransform();
