@@ -38,18 +38,15 @@ class Method extends require("../base") {
 
   methodCommands(){
     return {
-        "   -l": " or \x1b[36m--load\x1b[0m        Load methods",
-
-        "   -s": " or \x1b[36m--sizes\x1b[0m       Sizes of Menu by type: [\x1b[36m-l -s\x1b[0m|\x1b[36m-l --sizes\x1b[0m]",
-        "   -j": " or \x1b[36m--json\x1b[0m        JSON format: [\x1b[36m-l -j\x1b[0m|\x1b[36m-l --json\x1b[0m]",
-
-        "   -T": " or \x1b[36m--type\x1b[0m        Menu type: [\x1b[36m-T \x1b[0m|\x1b[36m-g --type=\x1b[0m]\x1b[4mtype\x1b[0m",
-        "   -t": " or \x1b[36m--toppings\x1b[0m    Toppings of Menu by type: [\x1b[36m-l -t\x1b[0m|\x1b[36m-l --toppings\x1b[0m]",
+        "   -l": " or \x1b[36m--list\x1b[0m        list available methods",
+        "   -n": " or \x1b[36m--name\x1b[0m        method by name: [\x1b[36m-n \x1b[0m|\x1b[36m--name=\x1b[0m]\x1b[4mmethod_name\x1b[0m",
+        "   -i": " or \x1b[36m--info\x1b[0m        method info by method name: [\x1b[36m-n \x1b[0m|\x1b[36m--name=\x1b[0m]\x1b[4mmethod_name\x1b[0m[\x1b[36m-i\x1b[0m|\x1b[36m--info\x1b[0m]",
+        "   -t": " or \x1b[36m--type\x1b[0m        method type by method name: [\x1b[36m-n \x1b[0m|\x1b[36m--name=\x1b[0m]\x1b[4mmethod_name\x1b[0m[\x1b[36m-t\x1b[0m|\x1b[36m--type\x1b[0m]",
       };
   }
 
   methods(){
-    if (this.command === "methods") {
+    if (this.command === "method") {
       console.clear();
       // if (command.length !== 8)
       //   return this.emit("error", {
@@ -58,11 +55,11 @@ class Method extends require("../base") {
      
   
     let centered = `\x1b[36m NAME\x1b[0m
-  \x1b[36m methods\x1b[0m - Mongo Transform Class Methods and Class Method's Details
+  \x1b[36m method\x1b[0m - Mongo Transform Class Method and Class Method's Details
 
  \x1b[36mSYNOPSIS \x1b[0m
-  \x1b[36m methods\x1b[0m [\x1b[36m--load\x1b[0m|\x1b[36m-l\x1b[0m] [\x1b[36m-j\x1b[0m|\x1b[36m--json\x1b[0m][\x1b[36m-j -d \x1b[0m|\x1b[36m-j --depth=\x1b[0m|\x1b[36m--json --depth=\x1b[0m|\x1b[36m--json -d \x1b[0m]\x1b[4mdepth_level\x1b[0m 
-  \x1b[36m methods\x1b[0m [\x1b[36m-T\x1b[0m|\x1b[36m--type=\x1b[0m]\x1b[4m type\x1b[0m [\x1b[36m-s\x1b[0m|\x1b[36m--sizes\x1b[0m|\x1b[36m-t\x1b[0m|\x1b[36m--toppings\x1b[0m][\x1b[36m-j\x1b[0m|\x1b[36m--json\x1b[0m][\x1b[36m-j -d \x1b[0m|\x1b[36m-j --depth=\x1b[0m|\x1b[36m--json --depth=\x1b[0m|\x1b[36m--json -d \x1b[0m]\x1b[4mdepth_level\x1b[0m 
+  \x1b[36m method\x1b[0m [\x1b[36m--list\x1b[0m|\x1b[36m-l\x1b[0m] [\x1b[36m-j\x1b[0m|\x1b[36m--json\x1b[0m][\x1b[36m-j -d \x1b[0m|\x1b[36m-j --depth=\x1b[0m|\x1b[36m--json --depth=\x1b[0m|\x1b[36m--json -d \x1b[0m]\x1b[4mdepth_level\x1b[0m 
+  \x1b[36m method\x1b[0m [\x1b[36m-T\x1b[0m|\x1b[36m--type=\x1b[0m]\x1b[4m type\x1b[0m [\x1b[36m-s\x1b[0m|\x1b[36m--sizes\x1b[0m|\x1b[36m-t\x1b[0m|\x1b[36m--toppings\x1b[0m][\x1b[36m-j\x1b[0m|\x1b[36m--json\x1b[0m][\x1b[36m-j -d \x1b[0m|\x1b[36m-j --depth=\x1b[0m|\x1b[36m--json --depth=\x1b[0m|\x1b[36m--json -d \x1b[0m]\x1b[4mdepth_level\x1b[0m 
 
 \x1b[36m DESCRIPTION\x1b[0m
    Application menu and a menu object details. All menu items or a single menu can be viewed in 
@@ -71,7 +68,7 @@ class Method extends require("../base") {
    can also be selected by type by size by price or by type by toppings.
 
  \x1b[36m  The following options are available: \x1b[0m `;
-      this.centered(`\x1b[32m MONGO TRANSFORM CLASS METHODS AND CLASS METHODS USAGE MANUAL\x1b[0m`);
+      this.centered(`\x1b[32m MONGO TRANSFORM CLASS METHOD AND CLASS METHOD USAGE MANUAL\x1b[0m`);
       this.description(centered);
       this.verticalSpace(1);
       let options = {
