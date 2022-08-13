@@ -1,6 +1,7 @@
 "use strict";
+
 /**
- * @author Ericson S. Weah  <ericson.weah@gmail.com> <https://github.com/eweah>  <+1.801.671.7159>
+ * @author Ericson S. Weah  <ericson.weah@gmail.com> <https://github.com/eweah>  <+1.385.204.5167>
  *
  * @module Base
  * @kind class
@@ -16,9 +17,8 @@
 
 const { createReadStream, createWriteStream, promises } = require("fs");
 
-
 class Base extends require("stream").Transform {
-    constructor(options = {}) {
+  constructor(options = {}) {
     super({ objectMode: true, encoding: "utf-8", autoDestroy: true });
 
     Object.keys(options).forEach((key) => {
@@ -29,12 +29,410 @@ class Base extends require("stream").Transform {
     this.autobind(Base);
     // auto invoke methods
     this.autoinvoker(Base);
-    // add other classes method if methods do not already exists. Argument order matters!
-    this.methodizer( /**..classList */);
-    //Set maximum number of listeners to infinity
+    // add other classes method if methods do not already exist. Argument order matters!
+    // this.methodizer(..classList);
+    //Set the maximum number of listeners to infinity
     this.setMaxListeners(Infinity);
   }
 
+  texAligner = (...args) => {
+    let options = {
+      pad: 75,
+      position: process.stdout.columns,
+      hline: false,
+      keyColor: "36",
+      valueColor: "33",
+    };
+    if (args.length > 1) {
+      if (typeof args[0] === "object") {
+        for (let prop in args[0]) {
+          if (options.hasOwnProperty(prop)) {
+            options[prop] = args[0][prop];
+          }
+        }
+      }
+    }
+
+    let i = args.length > 1 ? 1 : 0;
+
+    for (; i < args.length; i++) {
+      if (typeof args[i] === "object") {
+        for (let prop in args[i]) {
+          let key = `\x1b[${options.keyColor}m${prop}\x1b[0m`;
+          let value = `\x1b[${options.valueColor}m${args[i][prop]}\x1b[0m`;
+          let padding = options.pad - key.length;
+
+          for (let i = 0; i < padding; i++) {
+            key += " ";
+          }
+          key += value;
+          options.hline === true
+            ? hline(1, options.position, key)
+            : console.log(key);
+        }
+      } else {
+        let key = `\x1b[36mKey\x1b[0m`;
+        let value = `\x1b[33m${args[i]}\x1b[0m`;
+        let padding = options.pad - key.length;
+
+        for (let i = 0; i < padding; i++) {
+          key += " ";
+        }
+        key += value;
+        options.hline === true
+          ? hline(1, options.position, key)
+          : console.log(key);
+      }
+    }
+  };
+
+  verticalSpace(NumberOfLines) {
+    NumberOfLines =
+      typeof NumberOfLines === "number" && NumberOfLines > 0
+        ? NumberOfLines
+        : 1;
+    for (let i = 0; i < NumberOfLines; i++) {
+      console.log("");
+    }
+  }
+  // horizontal line across the screen
+  horizontalLine() {
+    const width = process.stdout.columns;
+    let line = "";
+    for (let i = 0; i < width; i++) {
+      line += "-";
+    }
+    console.log(line);
+  }
+
+  // create centered text on the screen
+  centered(str) {
+    str = typeof str === "string" && str.trim().length > 0 ? str.trim() : "";
+    const width = process.stdout.columns;
+    // calculate left padding
+    const leftPadding = Math.floor((width - str.length) / 2);
+    // put in left padding space before the string
+    let line = "";
+    for (let i = 0; i < leftPadding; i++) {
+      line += " ";
+    }
+    line += str;
+    console.log(line);
+  }
+  // padding (str){
+  //     str = typeof (str) === 'string' && str.trim().length > 0 ? str.trim() : ''
+  //     const width = process.stdout.columns
+  //     // calculate left padding
+  //     const leftPadding = Math.floor((width - str.length) / 2)
+  //     // put in left padding space before the string
+  //     let line = ''
+  //     for (let i = 0; i < leftPadding; i++) {
+  //         line += ' '
+  //     }
+  //     line += str
+  //     console.log(line)
+  // }
+
+  description(str) {
+    str = typeof str === "string" && str.trim().length > 0 ? str.trim() : "";
+    const width = process.stdout.columns;
+    // calculate left padding
+    const leftPadding = Math.floor((width - str.length) / 4);
+    // put in left padding space before the string
+    let line = "";
+    for (let i = 0; i < leftPadding; i++) {
+      line += " ";
+    }
+    line += str;
+    console.log(line);
+  }
+  manual(str) {
+    str = typeof str === "string" && str.trim().length > 0 ? str.trim() : "";
+    const width = process.stdout.columns;
+    // calculate left padding
+    const leftPadding = Math.floor((width - str.length) / 4);
+    // put in left padding space before the string
+    let line = "";
+    for (let i = 0; i < leftPadding; i++) {
+      line += " ";
+    }
+    line += str;
+    console.log(line);
+  }
+
+  objectToDisplay(...args) {
+    let option = {};
+    option.object = {};
+    option.options = {};
+    if (args.length === undefined || args.length === 0) {
+      return option;
+    }
+    if (args.length >= 1) {
+      for (let i = 0; i < args.length; i++) {
+        if (typeof args[i] === "object") {
+          if (
+            !args[i].hasOwnProperty("object") &&
+            !args[i].hasOwnProperty("options")
+          ) {
+            option.object = args[i];
+            args[i] = option;
+          }
+          if (
+            args[i].hasOwnProperty("object") &&
+            !args[i].hasOwnProperty("options")
+          ) {
+            option.object = args[i]["object"];
+            args[i] = option;
+          }
+          if (
+            !args[i].hasOwnProperty("object") &&
+            args[i].hasOwnProperty("options")
+          ) {
+            option.options = args[i]["options"];
+            args[i] = option;
+          }
+        } else if (typeof args[i] !== "object") {
+          if (
+            !args[i].hasOwnProperty("object") &&
+            args[i].hasOwnProperty("options")
+          ) {
+            option.object = {
+              key: args[i],
+            };
+            args[i] = option;
+          } else {
+            option.object = {
+              key: args[i],
+            };
+            args[i] = option;
+          }
+        }
+      }
+    }
+    return args;
+  }
+  displayer(...args) {
+    let option = {
+      showHidden: true,
+      depth: 10,
+      colors: true,
+      showProxy: true,
+      maxArrayLength: 100,
+      maxArrayLength: Infinity,
+      compact: true,
+      sorted: true,
+    };
+
+    let dargs = {};
+    dargs.object = {
+      data: "no data",
+    };
+    dargs.options = option;
+
+    if (args.length === undefined || args.length === 0) {
+      console.log(util.inspect(dargs.object, dargs.options));
+      return;
+    }
+    if (args.length >= 1) {
+      for (let i = 0; i < args.length; i++) {
+        if (typeof args[i] === "object") {
+          if (
+            args[i].hasOwnProperty("object") &&
+            args[i].hasOwnProperty("options")
+          ) {
+            if (JSON.stringify(args[i]["options"]) !== "{}") {
+              for (let prop in args[i]["options"]) {
+                if (option.hasOwnProperty(prop)) {
+                  option[prop] = args[i]["options"][prop];
+                }
+              }
+            }
+            console.log(util.inspect(args[i]["object"], option));
+          } else if (
+            args[i].hasOwnProperty("object") &&
+            !args[i].hasOwnProperty("options")
+          ) {
+            console.log(util.inspect(args[i]["object"], option));
+          } else if (!args[i].hasOwnProperty("object")) {
+            console.log(util.inspect(dargs.object, dargs.options));
+          }
+        } else {
+          console.log(args[i], "here");
+        }
+      }
+    }
+  }
+  display(object) {
+    this.displayer(...this.objectToDisplay(object));
+  }
+  padding(...args) {
+    let options = {
+      string: "-",
+      number: process.stdout.columns,
+      color: 37,
+    };
+    if (args.length === undefined || args.length === 0) {
+      // calculate left padding
+      let padding = Math.floor(
+        (process.stdout.columns - options.string.length) / options.number
+      );
+      // put in left padding space before the string
+      let line = "";
+      for (let i = 0; i < padding; i++) {
+        line += " ";
+      }
+      line += `\x1b[${options.color}m${options.string}\x1b[0m`;
+      console.log(line);
+      return;
+    }
+
+    for (let i = 0; i < args.length; i++) {
+      if (typeof args[i] === "object") {
+        for (let prop in args[i]) {
+          let checkProp = prop === "number" && args[i][prop] <= 0 ? 1 : prop;
+          if (options.hasOwnProperty(checkProp)) {
+            options[checkProp] = args[i][checkProp];
+          }
+        }
+      } else {
+        // calculate left padding
+        let padding = Math.floor(
+          (process.stdout.columns - options.string.length) / options.number
+        );
+        // put in left padding space before the string
+        let line = "";
+        for (let i = 0; i < padding; i++) {
+          line += " ";
+        }
+        line += `\x1b[${options.color}m${options.string}\x1b[0m`;
+        console.log(line);
+      }
+      // calculate left padding
+      let padding = Math.floor(
+        (process.stdout.columns - options.string.length) / options.number
+      );
+      // put in left padding space before the string
+      let line = "";
+      for (let i = 0; i < padding; i++) {
+        line += " ";
+      }
+      line += `\x1b[${options.color}m${options.string}\x1b[0m`;
+      console.log(line);
+    }
+  }
+
+  elapsed(start = new Date(), end = new Date()) {
+    if (!util.types.isDate(start)) {
+      start = new Date();
+    }
+    if (!util.types.isDate(end)) {
+      end = new Date();
+    }
+
+    let result = {};
+    // Get the time difference
+    let delatt = (end - start) / 1000;
+
+    let ymod = delatt / (60 * 60 * 24 * 365);
+    let years = Math.trunc(delatt / (60 * 60 * 24 * 365));
+    let mmod = 12 * (ymod - years);
+    let months = Math.trunc(mmod);
+    let dmod = (365 * (mmod - months)) / 12;
+    let days = Math.trunc(dmod);
+
+    let hmod = 24 * (dmod - days);
+
+    let hours = Math.trunc(hmod);
+
+    let minmod = 60 * (hmod - hours);
+
+    let minutes = Math.trunc(minmod);
+
+    let smod = 60 * (minmod - minutes);
+
+    let seconds = Math.trunc(smod);
+
+    result.years = years;
+    result.months = months;
+    result.days = days;
+    result.hours = hours;
+    result.minutes = minutes;
+    result.seconds = seconds;
+
+    return result;
+  }
+
+  pluralize(item, quantity) {
+    return quantity > 1 ? `${item}s` : `${item}`;
+  }
+  spliter(str, spl) {
+    if (str === undefined || spl === undefined) return [];
+    return str
+      .split(spl)
+      .filter((string) => string != "")
+      .map((st) => st.trim());
+  }
+  clean(string) {
+    return string
+      .split(" ")
+      .filter((str) => str != "")
+      .map((str) => str.trim())
+      .join(" ");
+  }
+  onfromthelasttime(date) {
+    return this.elapsed(new Date(date), new Date());
+  }
+
+  completer(line) {
+    const completions = ".help .error .exit .quit .q".split(" ");
+    const hits = completions.filter((c) => c.startsWith(line));
+    // Show all completions if none found
+    return [hits.length ? hits : completions, line];
+  }
+  common() {
+    this.on("clear", () => {
+      console.clear();
+    });
+    this.on("exit", () => {
+      this.close();
+    });
+    this.on("leave", () => {
+      this.close();
+    });
+    this.on("quit", () => {
+      this.close();
+    });
+  }
+  invalidCommand() {
+    this.on("command-not-found", (data) => {
+      console.log();
+      console.log(`\x1b[31m${data.error}\x1b[0m`);
+      console.log();
+      //   this.prompt();
+      //process.exit(0)
+    });
+
+    this.on("error", (data) => {
+      console.log();
+      console.log(`\x1b[31m${data.error}\x1b[0m`);
+      console.log();
+      //   this.prompt();
+      // process.exit(0)
+    });
+    this.on("success", (data) => {
+      console.log(`\x1b[36m${data.message}\x1b[0m`);
+    });
+  }
+
+  infos(object, depth = 1) {
+    console.log(
+      util.inspect(object, {
+        showHidden: true,
+        colors: true,
+        depth: depth,
+      })
+    );
+  }
   /**
      * @name getFromIterable
      * @function
@@ -43,6 +441,8 @@ class Base extends require("stream").Transform {
      * @param {Object} options Options provided to new stream.Readable([options]). By default, Readable.from() will set options.objectMode to true, unless this is explicitly opted out by setting options.objectMode to false.
      * 
      * @description creates readable streams out of iterators.
+
+
      * 
      * @return {Base}
      * 
@@ -110,7 +510,7 @@ class Base extends require("stream").Transform {
     for (let className of classNamesList) {
       for (let method of Object.getOwnPropertyNames(className.prototype)) {
         if (this[method] === undefined || !this[method]) {
-          if (typeof className.prototype[method] === "function" && className.prototype[method] !== "constructor") {
+          if (typeof className.prototype[method] === "function") {
             this[method] = className.prototype[method];
             // auto bind each method form className class to this
             this[method] = this[method].bind(this);
@@ -134,20 +534,18 @@ class Base extends require("stream").Transform {
 
   autoinvoker(className = {}) {
     for (let method of Object.getOwnPropertyNames(className.prototype)) {
-      if (typeof this[method] === "function" && method !== "constructor") {
-        this.autoinvoked().forEach((name) => {
-          if (method === name) {
-            this[method]();
-          }
-        });
-      }
+      this.autoinvoked().forEach((name) => {
+        if (method === name) {
+          this[method]();
+        }
+      });
     }
   }
 
   addDefault() {
     if (!this.createWriteStream) this.createWriteStream = createWriteStream;
     if (!this.createReadStream) this.createReadStream = createReadStream;
-    if (!this.promises) this.promises = promises;
+    if (!promises) this.promises = promises;
   }
   /**
    * @name autoinvoked
@@ -238,7 +636,7 @@ class Base extends require("stream").Transform {
 
      Implementors should not override this method but instead implement readable._destroy().
     *    
-    * @return {Base|this}
+    * @return Base
     * 
     */
 
@@ -300,7 +698,7 @@ class Base extends require("stream").Transform {
   
       The Readable stream will properly handle multi-byte characters delivered through the stream that would otherwise become improperly decoded if simply pulled from the stream as Buffer objects.
        *    
-       * @return {Base|this} The destination, allowing for a chain of pipes if it is a Duplex or a Transform stream
+       * @return Base The destination, allowing for a chain of pipes if it is a Duplex or a Transform stream
        * 
        */
 
@@ -319,11 +717,11 @@ class Base extends require("stream").Transform {
   
         If the destination is specified, but no pipe is set up for it, then the method does nothing.
        *    
-       * @return {Base|this} 
+       * @return Base 
        * 
        */
 
-  unpipe(destination) {}
+  unpipe(e) {}
 
   /**
        * @name unshift
@@ -342,7 +740,7 @@ class Base extends require("stream").Transform {
   
       Developers using stream.unshift() often should consider switching to the use of a Transform stream instead. See the API for stream implementers section for more information.
        *    
-       * @return {Base|this} 
+       * @return Base 
        * 
        */
 
@@ -361,7 +759,7 @@ class Base extends require("stream").Transform {
   
       It will rarely be necessary to use readable.wrap() but the method has been provided as a convenience for interacting with older Node.js applications and libraries.
        *    
-       * @return {Base|this} 
+       * @return Base 
        * 
        */
 
@@ -438,7 +836,7 @@ class Base extends require("stream").Transform {
       * 
       */
 
-  pipe(destination, options = { end: true }) {}
+  pipe(e, options = { end: true }) {}
 
   /**
       * @name unpipe
@@ -453,11 +851,11 @@ class Base extends require("stream").Transform {
  
        If the destination is specified, but no pipe is set up for it, then the method does nothing.
       *    
-      * @return {Base|this} 
+      * @return Base 
       * 
       */
 
-  unpipe(destination) {}
+  unpipe(e) {}
 
   /**
       * @name unshift
@@ -476,7 +874,7 @@ class Base extends require("stream").Transform {
  
      Developers using stream.unshift() often should consider switching to the use of a Transform stream instead. See the API for stream implementers section for more information.
       *    
-      * @return {Base|this} 
+      * @return Base 
       * 
       */
 
@@ -495,14 +893,14 @@ class Base extends require("stream").Transform {
  
      It will rarely be necessary to use readable.wrap() but the method has been provided as a convenience for interacting with older Node.js applications and libraries.
       *    
-      * @return {Base|this} 
+      * @return Base 
       * 
       */
 
   wrap(stream) {}
 
   /**
-      * @name _destory
+      * @name _destroy
       * @function
       * 
       * @param {Error} error A possible error..
@@ -522,13 +920,3 @@ class Base extends require("stream").Transform {
 }
 
 module.exports = Base;
-
-
-
-
-
-
-
-
-
-
