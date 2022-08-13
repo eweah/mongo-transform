@@ -17,8 +17,8 @@
 const { EventEmitter } = require("events");
 const { MongoClient } = require("mongodb");
 
-require("../../../config/Env");
-class Callback extends require("../../../Base") {
+require("../config/Env");
+class Callback extends require("../Base") {
   constructor(options = {}) {
     super({ objectMode: true, encoding: "utf-8", autoDestroy: true });
     

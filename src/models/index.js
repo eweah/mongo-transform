@@ -20,7 +20,7 @@
  * @classdesc Mongo class
  */
 
-require("../../../config/Env");
+require("../config/Env");
 
 const { MongoClient } = require("mongodb");
 
@@ -29,7 +29,7 @@ const Callback = require("./Callback");
 const CallbackQuery = require('./CallbackQuery')
 const CallbackQueryValidator = require('./CallbackQueryValidator')
 
-class Mongo extends require("../../../Base") {
+class Mongo extends require("../Base") {
   constructor(options = {}) {
     super({ objectMode: true, encoding: "utf-8", autoDestroy: true });
     Object.keys(options).forEach((key) => {
@@ -88,3 +88,6 @@ class Mongo extends require("../../../Base") {
 }
 
 module.exports = Mongo;
+
+
+

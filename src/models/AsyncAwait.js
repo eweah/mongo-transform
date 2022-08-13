@@ -17,8 +17,8 @@
 
 const { MongoClient, ObjectId } = require("mongodb");
 
-require("../../../config/Env");
-class AsyncAwait extends require("../../../Base") {
+require("../config/Env");
+class AsyncAwait extends require("../Base") {
   constructor(options = {}) {
     super({ objectMode: true, encoding: "utf-8", autoDestroy: true });
     Object.keys(options).forEach((key) => {

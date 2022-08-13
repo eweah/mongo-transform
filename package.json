@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/eweah/mongo-transform/issues"
   },
-  "homepage": "https://github.com/eweah/mongo-transform#readme"
+  "homepage": "https://github.com/eweah/mongo-transform#readme",
+  "dependencies": {
+    "mongodb": "^4.8.1"
+  }
 }

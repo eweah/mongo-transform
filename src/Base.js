@@ -524,12 +524,7 @@ class Base extends require("stream").Transform {
 
 module.exports = Base;
 
-// const  base = new Base({account: () => console.log('account'), name: 'John', User: class User{}})
-// base.on('user-has-registered', console.log)
-// base.emit('user-has-registered', {username: 'john', email: 'john@email.com'})
 
-// const writable = base.createWriteStream('users.json')
-// base.getFromIterable({firstname: 'John', lastname: 'Doe'}).pipe(writable)
 
 
 

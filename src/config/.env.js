@@ -8,6 +8,6 @@
 |
 */
 module.exports = () => ({
-    DATABASE_NAME: 'express_server_and_api',
+    DATABASE_NAME: 'mongo-transform',
     DATABASE_URL: 'mongodb://localhost:27017',
 })
