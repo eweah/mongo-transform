@@ -17,7 +17,7 @@
 
 const { createReadStream, createWriteStream, promises } = require("fs");
 
-class Man extends require("./Base") {
+class Default extends require("./Base") {
   constructor(options = {}) {
     super({ objectMode: true, encoding: "utf-8", autoDestroy: true });
 
@@ -26,9 +26,9 @@ class Man extends require("./Base") {
     });
 
     // auto bind methods
-    this.autobind(Man);
+    this.autobind(Default);
     // auto invoke methods
-    this.autoinvoker(Man);
+    this.autoinvoker(Default);
     // add other classes method if methods do not already exist. Argument order matters!
     // this.methodizer(..classList);
     //Set the maximum number of listeners to infinity
@@ -39,11 +39,13 @@ class Man extends require("./Base") {
     return {
         man: "Mongo Transform Command Line Interface (CLI) Manual",
         help: 'Alias of the "man" command',
+        exit: "Kill the CLI and the rest of the application",
+        quit: "Kill the CLI and the rest of the application",
         methods: "List all methods on Mongo Transform Object/Class/Function",
         events: "Events emitted by Mongo Transform",
       };
   }
-  man() {
+  default() {
 
     if (this.command === "man") {
         console.clear();
@@ -51,7 +53,7 @@ class Man extends require("./Base") {
     \x1b[36mman\x1b[0m - Mongo Transform Command Line Interface (CLI) Manual 
 
 \x1b[36mSYPNOSIS\x1b[0m
-    \x1b[36mman\x1b[0m [\x1b[36mman\x1b[0m|\x1b[36mhelp\x1b[0m|\x1b[36mmethods\x1b[0m|\x1b[36mevent\x1b[0m|\x1b[36mclass\x1b[0m] 
+    \x1b[36mman\x1b[0m [\x1b[36mman\x1b[0m|\x1b[36mhelp\x1b[0m|\x1b[36mexit\x1b[0m|\x1b[36mquit\x1b[0m|\x1b[36mmethods\x1b[0m|\x1b[36mevent\x1b[0m|\x1b[36mclass\x1b[0m] 
 
 \x1b[36mDESCRIPTION\x1b[0m
     Mongo Transform Command Line Interface (CLI) Manual.
@@ -501,5 +503,5 @@ class Man extends require("./Base") {
  
 }
 
-module.exports = Man;
+module.exports = Default;
 
