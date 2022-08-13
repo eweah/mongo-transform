@@ -20,16 +20,17 @@
  * @classdesc Mongo class
  */
 
-require("../config/Env");
+ const { createReadStream, createWriteStream, promises } = require("fs");
+require("./src/config/Env");
 
 const { MongoClient } = require("mongodb");
 
-const AsyncAwait = require("./AsyncAwait");
-const Callback = require("./Callback");
-const CallbackQuery = require('./CallbackQuery')
-const CallbackQueryValidator = require('./CallbackQueryValidator')
+const AsyncAwait = require("./src/models/AsyncAwait");
+const Callback = require("./src/models/Callback");
+const CallbackQuery = require('./src/models/CallbackQuery')
+const CallbackQueryValidator = require('./src/models/CallbackQueryValidator')
 
-class Mongo extends require("../Base") {
+class Mongo extends require("./src/Base") {
   constructor(options = {}) {
     super({ objectMode: true, encoding: "utf-8", autoDestroy: true });
     Object.keys(options).forEach((key) => {
@@ -70,6 +71,12 @@ class Mongo extends require("../Base") {
         fn
       );
   }
+
+  addDefault() {
+    if (!this.createWriteStream) this.createWriteStream = createWriteStream;
+    if (!this.createReadStream) this.createReadStream = createReadStream;
+    if (!this.promises) this.promises = promises;
+  }
   /**
    * @name autoinvoked
    * @function
@@ -83,7 +90,7 @@ class Mongo extends require("../Base") {
    */
 
   autoinvoked() {
-    return ["init"];
+    return ["init", "addDefault"];
   }
 }
 
