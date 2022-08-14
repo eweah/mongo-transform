@@ -93,7 +93,6 @@ class Callback extends require("../Base") {
     obj[name] = name;
     return obj;
   }
-
   createDatabase(databaseName = this.dbName) {
     this.validateDbName(databaseName, "createDatabase-error");
     const dbFn = (error, db) => {
@@ -144,6 +143,42 @@ class Callback extends require("../Base") {
     };
     this.connect(fn);
   }
+
+
+   /**
+   * @name createCollection
+   * @function
+   *
+   * @param {String} collectionName database collection name string
+   *
+   * @description Creates/adds a database collection
+   *
+   * @return {EventEmitter}  emits a 'createCollection' (success) or 'createCollection-error' (error)  event
+   *
+   */
+    dropCollection(collectionName = this.collection) {
+      this.validateCollectionName(collectionName, "dropCollection-error");
+  
+      const fn = (error, db) => {
+        if (error) {
+          db.close();
+          return this.emit("dropCollection-error", error);
+        }
+        const dbs = db.db(this.db);
+  
+        const fnc = (err, res) => {
+          if (err) {
+            db.close();
+            return this.emit("dropCollection-error", err);
+          }
+  
+          this.emit("dropCollection", res.s.namespace);
+          db.close();
+        };
+        dbs.createCollection(collectionName, fnc);
+      };
+      this.connect(fn);
+    }
 
   /**
    * @name insertOne
@@ -786,9 +821,6 @@ class Callback extends require("../Base") {
       });
       this.validateToken(token, "firstByToken-error");
     }
-  
-
-  
 
 }
 

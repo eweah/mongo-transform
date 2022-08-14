@@ -797,7 +797,7 @@ class CallbackQuery extends require("../Base") {
    * @return {EventEmitter}  emits a 'leftJoin' (success) or 'leftJoin-error' (error)  event
    *
    */
-  letfJoinCallback(
+  Callback(
     collectionOne = "users",
     collectionTwo = "contacts",
     localField = "_id",

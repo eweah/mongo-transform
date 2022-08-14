@@ -84,33 +84,48 @@ class CLI extends require("./base") {
 
   errorNotification (command){
     let ls
-    if(command && command.length > 18){
-        ls = spawn('echo', ['', `\x1b[5m\x1b[31m '${command.slice(0,18)}...' is not a valid command.\x1b[0m\x1b[0m`]);
-    }else{
-        ls = spawn('echo', ['', `\x1b[5m\x1b[31m '${command.slice(0,18)}' is not a valid command.\x1b[0m\x1b[0m`]);
-    }
-
-    ls.stdout.on('data', (data) => {
-        if(command !== undefined){
-            console.log(this.invalidCommand(data));
+    
+    if(command !== undefined){
+        if(command.length > 18){
+            ls = spawn('echo', ['', `\x1b[5m\x1b[31m '${command.slice(0,18)}...' is not a valid command.\x1b[0m\x1b[0m`]);
+        }else{
+            ls = spawn('echo', ['', `\x1b[5m\x1b[31m '${command.slice(0,18)}' is not a valid command.\x1b[0m\x1b[0m`]);
         }
-        console.log();
-        console.log(`Some Available Options:
-        man - for the man page.
-        methods - for available method lists.
-        help - for the help page.
-        events - for available events.
-        database - for connected database.
-        model - for available models or collections.
-        class - for main class.
-            `);
-    });
+        ls.stdout.on('data', (data) => {
+            if(command !== undefined){
+                console.log(this.invalidCommand(data));
+            }
+            console.log();
+            console.log(`Some Available Options:
+            man - for the man page.
+            methods - for available method lists.
+            help - for the help page.
+            events - for available events.
+            database - for connected database.
+            model - for available models or collections.
+            class - for main class.
+                `);
+        });
+        
+        ls.stderr.on('data', (data) => {});
+        
+        ls.on('close', (code) => {})
+        }else{
+            console.log(`Some Available Options:
+            man - for the man page.
+            methods - for available method lists.
+            help - for the help page.
+            events - for available events.
+            database - for connected database.
+            model - for available models or collections.
+            class - for main class.
+                `);
+        }
     
-    ls.stderr.on('data', (data) => {});
-    
-    ls.on('close', (code) => {})
     }
+   
 
+   
 
   init(){
     switch(this.cmd2()){
