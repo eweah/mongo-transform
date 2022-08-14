@@ -113,7 +113,10 @@ class Method extends require("../base") {
   callbackModelHash(command){
     let hash = {}
     hash["      \x1b[32m1|\x1b[0m"] = "=================== Generic Example ===============";
+    hash[`               `] = '';
     hash[`      var CollectionName = new MongoTransform({collection: 'CollectionName'})`] = ": Instantiates the CollectionName model.";
+    hash[`                `] = '';
+    hash[`      \x1b[33mListening for '${command}' and '${command}-error' events on CollectionName: \x1b[0m\x1b[36m\x1b[0m`] = '';
     hash[`      CollectionName.\x1b[35m${command}\x1b[0m\x1b[36m()\x1b[0m`] = ": Gets all CollectionName models from the database";
     hash[`      CollectionName.on('\x1b[35m${command}\x1b[0m\x1b[36m', data => console.log(data))\x1b[0m`] = ": Listens for the success event.";
     hash[`      CollectionName.on('\x1b[35m${command}\x1b[0m\x1b[31m-error\x1b[0m\x1b[36m', data => console.error(error))\x1b[0m`] = ": Listens for the error event.";
@@ -122,7 +125,10 @@ class Method extends require("../base") {
     hash[`      `] = '';
 
     hash["      \x1b[32m2|\x1b[0m"] = "=================== Specific Example ===============";
+    hash[`                 `] = '';
     hash[`      var User = new MongoTransform({collection: 'users'})`] = ": Instantiates the User model.";
+    hash[`                  `] = '';
+    hash[`      \x1b[33mListening for '${command}' and '${command}-error' events on User: \x1b[0m\x1b[36m\x1b[0m`] = '';
     hash[`      User.\x1b[35m${command}\x1b[0m\x1b[36m()\x1b[0m`] = ": Gets all User models from the database";
     hash[`      User.on('\x1b[35m${command}\x1b[0m\x1b[36m', data => console.log(data))\x1b[0m`] = ": Listens for the success event.";
     hash[`      User.on('\x1b[35m${command}\x1b[0m\x1b[31m-error\x1b[0m\x1b[36m', data => console.error(error))\x1b[0m`] = ": Listens for the error event.";
