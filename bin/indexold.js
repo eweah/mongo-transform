@@ -7,15 +7,8 @@ const Event = require('./event');
 const MongoTransform = require('./MongoTransform');
 const Model = require('./model');
 const Database = require('./db');
-const util = require('node:util');
-const { exec, spawn } = require('node:child_process');
-exec(`echo -e \x1b[31m InvalidCommand: is not a valid command\x1b[0m `);
-// const exec = util.promisify(require('node:child_process').exec);
-// async function run(command) {
-//     const { stdout, stderr } = await exec(`echo -e \x1b[31m ${command}: is not a valid command\x1b[0m `);
-//     console.log('stdout:', stdout);
-//     console.error('stderr:', stderr);
-//   }
+
+const { spawn } = require('node:child_process');
 
 
  
@@ -35,7 +28,7 @@ const invalidCommand = (command = 'command') => `
 
 const errorNotification = (command) => {
     let ls
-    if(command.length > 18){
+    if(command && command.length > 18){
         ls = spawn('echo', ['', `\x1b[5m\x1b[31m '${command.slice(0,18)}...' is not a valid command.\x1b[0m\x1b[0m`]);
     }else{
         ls = spawn('echo', ['', `\x1b[5m\x1b[31m '${command.slice(0,18)}' is not a valid command.\x1b[0m\x1b[0m`]);
@@ -67,9 +60,7 @@ const errorNotification = (command) => {
     
     
     }
-for(let i = 2; i < process.argv.length; i++){
-    console.log(process.argv[i]);
-}
+
 switch(cmd1){
     case 'h':
         console.log('Mongo Transform Help Page');

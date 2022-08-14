@@ -16,6 +16,7 @@
  */
 
 const { createReadStream, createWriteStream, promises } = require("fs");
+const MongoTransform = require('../../index')
 
 class Method extends require("../base") {
   constructor(options = {}) {
@@ -45,7 +46,7 @@ class Method extends require("../base") {
       };
   }
 
-  methods(){
+  method(){
     if (this.command === "method") {
       console.clear();
       // if (command.length !== 8)
@@ -82,6 +83,29 @@ class Method extends require("../base") {
       console.log();
     }
  
+  }
+  list(){
+    if(this.command == '--list'){
+       let Mongo = new MongoTransform
+       for(let method in Mongo){
+        if(typeof(Mongo[method]) === 'function'){
+          if(Object.getOwnPropertyNames(require('stream').Transform.prototype).includes(method)){
+            console.log(`\x1b[36m${method}\x1b[0m`,`\x1b[32m(Transform:MongoTransform);\x1b[0m`);
+          }
+          else if(Object.getOwnPropertyNames(require('stream').Duplex.prototype).includes(method)){
+            console.log(`\x1b[36m${method}\x1b[0m`,`\x1b[32m(Duplex:Transform:MongoTransform)\x1b[0m`);
+          }
+          else if(Object.getOwnPropertyNames(require('events').EventEmitter.prototype).includes(method)){
+            console.log(`\x1b[36m${method}\x1b[0m`, `\x1b[32m(EventEmitter:Duplex:Transform:MongoTransform)\x1b[0m`);
+          }
+          else {
+            console.log(`\x1b[36m${method}\x1b[0m`, `\x1b[34m(MongoTransform)\x1b[0m`);
+          }
+          
+        }
+       }
+  
+    }
   }
 
 

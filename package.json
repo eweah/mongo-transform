@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "bin": {
-    "mongoTransform": "./bin/index.js"
+    "mongoTransform": "./bin/cli.js"
   },
   "directories": {
     "lib": "lib"
