@@ -37,6 +37,31 @@ class Method extends require("../base") {
   }
 
 
+  corresponding(){
+    return {
+      'all': 'find(query = {}, projection = {})',
+      'create': 'insertOne(query = {})',
+      'insertOne': 'insertOne(query = {})',
+      'insertMany': 'insertMany(data = [])',
+      'createMany': 'insertMany(data = [])',
+      'findOne': 'findOne(query = {})',
+      'first': 'findOne(query = {})',
+      'find': 'find(query = {}, projection = {})',
+      'sort': 'find(query = {}, projection = {}).sort',
+      'deleteOne': 'deleteOne(query = {})',
+      'deleteMany': 'deleteMany(query = {}, cfn = () => {})',
+      'dropCollection': 'dropCollection',
+      'collectionDrop': 'dropCollection',
+      'updateOne': 'updateOne(query, { $set: data }, cfn = () => {})',
+      'update': 'updateOne(query, { $set: data }, cfn = () => {})',
+      'updateMany': 'updateMany(query, { $set: data }, cfn = () => {})',
+      'limit': 'find(query = {}, projection = {}).limit(limit)',
+
+
+
+
+    }
+  }
   methodCommands(){
     return {
         "   -l": " or \x1b[36m--list\x1b[0m        list available methods",
@@ -53,27 +78,35 @@ class Method extends require("../base") {
     // };
     return {
 
-      "      =================== Generic Example ===============": "",
+      "      1.": "=================== Generic Example ===============",
+      
       "      var CollectionName = new MongoTransform({collection: 'CollectionName'})": ": Instantiates the CollectionName model.",
-      "      CollectionName.all()": ": Gets all models from the database",
+      "      CollectionName.\x1b[35mall\x1b[0m\x1b[36m()\x1b[0m": ": Gets all CollectionName models from the database",
 
-      "      CollectionName.on('all', data => console.log(data))": ": Listens for the success event on the CollectionName model.",
+      "      CollectionName.on('\x1b[35mall\x1b[0m\x1b[36m', data => console.log(data))\x1b[0m": ": Listens for the success event on the CollectionName model.",
 
-      "      CollectionName.on('all-error', data => console.error(error))": ": Listens for the error event on the CollectionName model.",
+      "      CollectionName.on('\x1b[35mall\x1b[0m\x1b[31m-error\x1b[0m\x1b[36m', data => console.error(error))\x1b[0m": ": Listens for the error event on the CollectionName model.",
+
+      "      CollectionName.once('\x1b[35mall\x1b[0m\x1b[36m', data => console.log(data))\x1b[0m": ": Listens for the success event on the CollectionName model.",
+
+      "      CollectionName.once('\x1b[35mall\x1b[0m\x1b[31m-error\x1b[36m', data => console.error(error))\x1b[0m": ": Listens for the error event on the CollectionName model.",
 
         
 
         "": "",
-        "      =================== Specific Example ===============": "",
-        "": "",
-        "": "",
+        "      2.": "=================== Specific Example ===============",
+       
 
         "      var User = new MongoTransform({collection: 'users'})": ": Instantiates the User model.",
-        "      User.all()": ": Gets all models from the database",
+        "      User.\x1b[35mall\x1b[0m\x1b[36m()\x1b[0m": ": Gets all User models from the database",
 
-        "      User.on('all', data => console.log(data))": ": Listens for the success event on the User model.",
+        "      User.on('\x1b[35mall\x1b[0m\x1b[36m', data => console.log(data))\x1b[0m": ": Listens for the success event on the User model.",
 
-        "      User.on('all-error', error => console.error(error))": ":  Listens for the error event on the User model.",
+        "      User.on('\x1b[35mall\x1b[0m\x1b[31m-error\x1b[36m', data => console.error(error))\x1b[0m": ":  Listens for the error event on the User model.",
+
+        "      User.once('\x1b[35mall\x1b[0m\x1b[36m', data => console.log(data))\x1b[0m": ": Listens for the success event on the User model.",
+
+        "      User.once('\x1b[35mall\x1b[0m\x1b[31m-error\x1b[36m', data => console.error(error))\x1b[0m": ":  Listens for the error event on the User model.",
 
       };
   }
@@ -143,7 +176,7 @@ class Method extends require("../base") {
     }
   }
 
-  methodUsage(command){
+  methodUsage(command, exactly = 'find'){
     console.clear();
           // if (command.length !== 8)
           //   return this.emit("error", {
@@ -155,15 +188,16 @@ class Method extends require("../base") {
       \x1b[36m ${command}\x1b[0m - Mongo Transform \x1b[36m${command}\x1b[0m method and \x1b[36m${command}\x1b[0m method Details
     
 \x1b[36mSYNOPSIS \x1b[0m
-      \x1b[36m ${command}\x1b[0m [\x1b[36m \x1b[0m|\x1b[36m{}\x1b[0m]
+      \x1b[36m ${command}\x1b[0m arguments: [\x1b[36m \x1b[0m|\x1b[36m{}\x1b[0m]
 
 \x1b[36m DESCRIPTION\x1b[0m
-      Mongo Transform \x1b[36m${command}\x1b[0m method and \x1b[36m${command}\x1b[0m method usage. \x1b[36m${command}\x1b[0m take no argument or \x1b[36m{}\x1b[0m (an empty object). 
-      It takes exactly the same argument as the Mongodb NodeJs driver \x1b[36mfind\x1b[0m, 
-      (see mongodb documentation: https://www.mongodb.com/docs/drivers/node/current/):
-      \x1b[36mdb.collection.find() or db.collection.find({}) \x1b[0m
+      Mongo Transform \x1b[36m${command}\x1b[0m method and \x1b[36m${command}\x1b[0m method usage. \x1b[36m${command}\x1b[0m takes no argument or \x1b[36m{}\x1b[0m (an empty object). 
+      It takes exactly the same argument as the Mongodb NodeJs driver \x1b[36m${exactly}\x1b[0m.
+      So \x1b[36m${command}\x1b[0m does whatsoever \x1b[36m${exactly}\x1b[0m does.
+      (see mongodb documentation: https://www.mongodb.com/docs/drivers/node/current):
+      \x1b[36mdb.collection.${exactly} or db.collectionName.${exactly} \x1b[0m
 
-     \x1b[36m  The following are some example of uses: \x1b[0m `;
+     \x1b[32m  The following are some usage examples: \x1b[0m `;
           this.centered(`\x1b[32m MONGO TRANSFORM \x1b[36m${command.toUpperCase()}\x1b[0m \x1b[32mMETHOD AND\x1b[0m \x1b[36m${command.toUpperCase()}\x1b[0m \x1b[32mMETHOD USAGE MANUAL\x1b[0m`);
           this.description(centered);
           this.verticalSpace(1);
@@ -184,7 +218,7 @@ class Method extends require("../base") {
       if(command){
         let Mongo = new MongoTransform
         if(Mongo[command]){
-          this.methodUsage(command);
+          this.methodUsage(command, this.corresponding()[command]);
         }else{
           console.log(`'${command}' method does not exist.`);
         }
