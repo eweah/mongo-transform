@@ -72,43 +72,26 @@ class Method extends require("../base") {
   }
 
   methodUserExamples(command){
-    // return {
-    //   "     -l": "  list available methods",
-    //   "     var CollectionName = new MongoTransform({collection: 'CollectionName'})": ": Instantiates the CollectionName model."
-    // };
-    return {
 
-      "      1.": "=================== Generic Example ===============",
-      
-      "      var CollectionName = new MongoTransform({collection: 'CollectionName'})": ": Instantiates the CollectionName model.",
-      "      CollectionName.\x1b[35mall\x1b[0m\x1b[36m()\x1b[0m": ": Gets all CollectionName models from the database",
+    let hash = {}
+    hash["      \x1b[32m1|\x1b[0m"] = "=================== Generic Example ===============";
+    hash[  `      var CollectionName = new MongoTransform({collection: 'CollectionName'})`] = ": Instantiates the CollectionName model.";
+    hash[`      CollectionName.\x1b[35m${command}\x1b[0m\x1b[36m()\x1b[0m`] = ": Gets all CollectionName models from the database";
+    hash[`      CollectionName.on('\x1b[35m${command}\x1b[0m\x1b[36m', data => console.log(data))\x1b[0m`] = ": Listens for the success event on the CollectionName model.";
+    hash[`      CollectionName.on('\x1b[35m${command}\x1b[0m\x1b[31m-error\x1b[0m\x1b[36m', data => console.error(error))\x1b[0m`] = ": Listens for the error event on the CollectionName model.";
+    hash[`      CollectionName.once('\x1b[35m${command}\x1b[0m\x1b[36m', data => console.log(data))\x1b[0m`] = ": Listens for the success event on the CollectionName model.";
+    hash[`      CollectionName.once('\x1b[35m${command}\x1b[0m\x1b[31m-error\x1b[36m', data => console.error(error))\x1b[0m`] = ": Listens for the error event on the CollectionName model.";
+    hash[`      `] = '';
 
-      "      CollectionName.on('\x1b[35mall\x1b[0m\x1b[36m', data => console.log(data))\x1b[0m": ": Listens for the success event on the CollectionName model.",
-
-      "      CollectionName.on('\x1b[35mall\x1b[0m\x1b[31m-error\x1b[0m\x1b[36m', data => console.error(error))\x1b[0m": ": Listens for the error event on the CollectionName model.",
-
-      "      CollectionName.once('\x1b[35mall\x1b[0m\x1b[36m', data => console.log(data))\x1b[0m": ": Listens for the success event on the CollectionName model.",
-
-      "      CollectionName.once('\x1b[35mall\x1b[0m\x1b[31m-error\x1b[36m', data => console.error(error))\x1b[0m": ": Listens for the error event on the CollectionName model.",
-
-        
-
-        "": "",
-        "      2.": "=================== Specific Example ===============",
-       
-
-        "      var User = new MongoTransform({collection: 'users'})": ": Instantiates the User model.",
-        "      User.\x1b[35mall\x1b[0m\x1b[36m()\x1b[0m": ": Gets all User models from the database",
-
-        "      User.on('\x1b[35mall\x1b[0m\x1b[36m', data => console.log(data))\x1b[0m": ": Listens for the success event on the User model.",
-
-        "      User.on('\x1b[35mall\x1b[0m\x1b[31m-error\x1b[36m', data => console.error(error))\x1b[0m": ":  Listens for the error event on the User model.",
-
-        "      User.once('\x1b[35mall\x1b[0m\x1b[36m', data => console.log(data))\x1b[0m": ": Listens for the success event on the User model.",
-
-        "      User.once('\x1b[35mall\x1b[0m\x1b[31m-error\x1b[36m', data => console.error(error))\x1b[0m": ":  Listens for the error event on the User model.",
-
-      };
+    hash["      \x1b[32m2|\x1b[0m"] = "=================== Specific Example ===============";
+    hash[  `      var User = new MongoTransform({collection: 'users'})`] = ": Instantiates the User model.";
+    hash[`      User.\x1b[35m${command}\x1b[0m\x1b[36m()\x1b[0m`] = ": Gets all User models from the database";
+    hash[`      User.on('\x1b[35m${command}\x1b[0m\x1b[36m', data => console.log(data))\x1b[0m`] = ": Listens for the success event on the User model.";
+    hash[`      User.on('\x1b[35m${command}\x1b[0m\x1b[31m-error\x1b[0m\x1b[36m', data => console.error(error))\x1b[0m`] = ": Listens for the error event on the User model.";
+    hash[`      User.once('\x1b[35m${command}\x1b[0m\x1b[36m', data => console.log(data))\x1b[0m`] = ": Listens for the success event on the User model.";
+    hash[`      User.once('\x1b[35m${command}\x1b[0m\x1b[31m-error\x1b[36m', data => console.error(error))\x1b[0m`] = ": Listens for the error event on the CollectionName model.";
+    hash[`      `] = '';
+    return hash;
   }
 
 
@@ -197,7 +180,7 @@ class Method extends require("../base") {
       (see mongodb documentation: https://www.mongodb.com/docs/drivers/node/current):
       \x1b[36mdb.collection.${exactly} or db.collectionName.${exactly} \x1b[0m
 
-     \x1b[32m  The following are some usage examples: \x1b[0m `;
+     \x1b[32m  The following are some usage examples (2): \x1b[0m `;
           this.centered(`\x1b[32m MONGO TRANSFORM \x1b[36m${command.toUpperCase()}\x1b[0m \x1b[32mMETHOD AND\x1b[0m \x1b[36m${command.toUpperCase()}\x1b[0m \x1b[32mMETHOD USAGE MANUAL\x1b[0m`);
           this.description(centered);
           this.verticalSpace(1);
@@ -208,7 +191,7 @@ class Method extends require("../base") {
             keyColor: "36",
             valueColor: "37",
           };
-          this.texAligner(options, this.methodUserExamples());
+          this.texAligner(options, this.methodUserExamples(command));
           console.log();
  
   }
