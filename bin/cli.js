@@ -75,6 +75,7 @@ class CLI extends require("./base") {
     return process.argv[9];
   }
 
+ 
   invalidCommand(command = 'command') {
     return `
     ----------------------------------------------------
@@ -128,8 +129,12 @@ class CLI extends require("./base") {
                     case '--list':
                         new Method({command: this.cmd3()}).list();
                         break;
-      
-                        console.log('-n choose');
+                    case '-n':
+                        if(this.cmd4()){
+                            new Method({command: this.cmd3()}).n(this.cmd4());
+                        }else{
+                            new Method({command: this.cmd3()}).n();
+                        }
                         break;
                     case '--name=':
                         console.log('--name=  choose');

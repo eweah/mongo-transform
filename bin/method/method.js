@@ -46,8 +46,41 @@ class Method extends require("../base") {
       };
   }
 
+  methodUserExamples(command){
+    // return {
+    //   "     -l": "  list available methods",
+    //   "     var CollectionName = new MongoTransform({collection: 'CollectionName'})": ": Instantiates the CollectionName model."
+    // };
+    return {
+
+      "      =================== Generic Example ===============": "",
+      "      var CollectionName = new MongoTransform({collection: 'CollectionName'})": ": Instantiates the CollectionName model.",
+      "      CollectionName.all()": ": Gets all models from the database",
+
+      "      CollectionName.on('all', data => console.log(data))": ": Listens for the success event on the CollectionName model.",
+
+      "      CollectionName.on('all-error', data => console.error(error))": ": Listens for the error event on the CollectionName model.",
+
+        
+
+        "": "",
+        "      =================== Specific Example ===============": "",
+        "": "",
+        "": "",
+
+        "      var User = new MongoTransform({collection: 'users'})": ": Instantiates the User model.",
+        "      User.all()": ": Gets all models from the database",
+
+        "      User.on('all', data => console.log(data))": ": Listens for the success event on the User model.",
+
+        "      User.on('all-error', error => console.error(error))": ":  Listens for the error event on the User model.",
+
+      };
+  }
+
+
   method(){
-    if (this.command === "method") {
+    if (true) {
       console.clear();
       // if (command.length !== 8)
       //   return this.emit("error", {
@@ -89,22 +122,76 @@ class Method extends require("../base") {
        let Mongo = new MongoTransform
        for(let method in Mongo){
         if(typeof(Mongo[method]) === 'function'){
-          if(Object.getOwnPropertyNames(require('stream').Transform.prototype).includes(method)){
-            console.log(`\x1b[36m${method}\x1b[0m`,`\x1b[32m(Transform:MongoTransform);\x1b[0m`);
+          if(!method.startsWith('validate') && !method.endsWith('Callback')){
+            if(Object.getOwnPropertyNames(require('stream').Transform.prototype).includes(method)){
+              console.log(`\x1b[36m${method}\x1b[0m`,`\x1b[32m(Transform:MongoTransform);\x1b[0m`);
+            }
+            else if(Object.getOwnPropertyNames(require('stream').Duplex.prototype).includes(method)){
+              console.log(`\x1b[36m${method}\x1b[0m`,`\x1b[32m(Duplex:Transform:MongoTransform)\x1b[0m`);
+            }
+            else if(Object.getOwnPropertyNames(require('events').EventEmitter.prototype).includes(method)){
+              console.log(`\x1b[36m${method}\x1b[0m`, `\x1b[32m(EventEmitter:Duplex:Transform:MongoTransform)\x1b[0m`);
+            }
+            else {
+              console.log(`\x1b[36m${method}\x1b[0m`, `\x1b[34m(MongoTransform)\x1b[0m`);
+            }
           }
-          else if(Object.getOwnPropertyNames(require('stream').Duplex.prototype).includes(method)){
-            console.log(`\x1b[36m${method}\x1b[0m`,`\x1b[32m(Duplex:Transform:MongoTransform)\x1b[0m`);
-          }
-          else if(Object.getOwnPropertyNames(require('events').EventEmitter.prototype).includes(method)){
-            console.log(`\x1b[36m${method}\x1b[0m`, `\x1b[32m(EventEmitter:Duplex:Transform:MongoTransform)\x1b[0m`);
-          }
-          else {
-            console.log(`\x1b[36m${method}\x1b[0m`, `\x1b[34m(MongoTransform)\x1b[0m`);
-          }
-          
+      
         }
        }
   
+    }
+  }
+
+  methodUsage(command){
+    console.clear();
+          // if (command.length !== 8)
+          //   return this.emit("error", {
+          //     error: `'${string}' is not command.`,
+          //   });
+         
+      
+        let centered = `\x1b[36m NAME\x1b[0m
+      \x1b[36m ${command}\x1b[0m - Mongo Transform \x1b[36m${command}\x1b[0m method and \x1b[36m${command}\x1b[0m method Details
+    
+\x1b[36mSYNOPSIS \x1b[0m
+      \x1b[36m ${command}\x1b[0m [\x1b[36m \x1b[0m|\x1b[36m{}\x1b[0m]
+
+\x1b[36m DESCRIPTION\x1b[0m
+      Mongo Transform \x1b[36m${command}\x1b[0m method and \x1b[36m${command}\x1b[0m method usage. \x1b[36m${command}\x1b[0m take no argument or \x1b[36m{}\x1b[0m (an empty object). 
+      It takes exactly the same argument as the Mongodb NodeJs driver \x1b[36mfind\x1b[0m, 
+      (see mongodb documentation: https://www.mongodb.com/docs/drivers/node/current/):
+      \x1b[36mdb.collection.find() or db.collection.find({}) \x1b[0m
+
+     \x1b[36m  The following are some example of uses: \x1b[0m `;
+          this.centered(`\x1b[32m MONGO TRANSFORM \x1b[36m${command.toUpperCase()}\x1b[0m \x1b[32mMETHOD AND\x1b[0m \x1b[36m${command.toUpperCase()}\x1b[0m \x1b[32mMETHOD USAGE MANUAL\x1b[0m`);
+          this.description(centered);
+          this.verticalSpace(1);
+          let options = {
+            pad: 13,
+            position: process.stdout.columns,
+            hline: false,
+            keyColor: "36",
+            valueColor: "37",
+          };
+          this.texAligner(options, this.methodUserExamples());
+          console.log();
+ 
+  }
+  n(command){
+
+    if(this.command == '-n'){
+      if(command){
+        let Mongo = new MongoTransform
+        if(Mongo[command]){
+          this.methodUsage(command);
+        }else{
+          console.log(`'${command}' method does not exist.`);
+        }
+      }else{
+        console.log('the method name argument is missing.');
+      }
+     
     }
   }
 

@@ -433,6 +433,11 @@ class Base extends require("stream").Transform {
       })
     );
   }
+  usage(command){
+    return `
+    ----------------------------------------------------
+    |${command}----------------------------------------------------`
+  }
   /**
      * @name getFromIterable
      * @function
