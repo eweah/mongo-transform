@@ -13,7 +13,7 @@ module.exports = (option = {}) => `'use strict';
 | properly.
 |
 */
-const MongoTransform = require('../../index');
+const MongoTransform = require('mongo-transform');
 
  class ${option.model} extends MongoTransform{
     constructor(options = {}){
@@ -23,5 +23,7 @@ const MongoTransform = require('../../index');
  }
 
  module.exports = ${option.model};
+
+
 `
 

@@ -19,6 +19,7 @@ const { createReadStream, createWriteStream, promises} = require("fs");
 const {join } = require('node:path');
 const {existsSync} = require('fs')
 const {mkdir} = promises
+const { exec } = require('node:child_process');
 const modelDefinition  = require('../templates/model')
 
 class Model extends require("../base"){
@@ -49,14 +50,34 @@ class Model extends require("../base"){
       await mkdir(path, {recursive: true});
     }
   }
+
+  checkForInstallation(){
+    exec('npm list mongo-transform', (error, stdout, stderr) => {
+      if (error) {
+        exec('npm link mongo-transform', (err, sto, sdi) => {
+            if(err) return error
+            if(sto){
+                console.log(sto)
+            }
+        })
+      }
+    });
+  }
   async make(command){
  
+   this.checkForInstallation();
     await this.addDirectory();
-    const modeName = command.charAt(0).toUpperCase() + command.slice(1);
+    const modelName = command.charAt(0).toUpperCase() + command.slice(1);
     const collectionName = this.cmd(command);
-    const writable = this.createWriteStream(join(this.path(), `${modeName}.js`));
-    writable.write(modelDefinition({model: modeName, collection: collectionName}));
-    writable.end('');
+    if(!existsSync(join(this.path(), `${modelName}.js`))){
+      const writable = this.createWriteStream(join(this.path(), `${modelName}.js`));
+      writable.write(modelDefinition({model: modelName, collection: collectionName}));
+      writable.end('');
+      console.log(`\x1b[32m${modelName} model successfully created!\x1b[0m`);
+    }else{
+      console.log(`\x1b[32m${modelName}\x1b[0m\x1b[31m model already exists!\x1b[0m`);
+    }
+    
   }
   addDefault() {
     if (!this.createWriteStream) this.createWriteStream = createWriteStream;
