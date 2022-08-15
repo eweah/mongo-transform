@@ -18,7 +18,7 @@
 const { createReadStream, createWriteStream, promises } = require("fs");
 const {inspect} = require('util');
 const MongoTransform = require('../../index');
-const {create}  = require('./native')
+const native  = require('./native');
 const Callback = require('../../src/models/Callback');
 const CallbackQuery = require('../../src/models/CallbackQuery');
 const CallbackQueryValidator = require('../../src/models/CallbackQueryValidator');
@@ -81,6 +81,8 @@ renderMethodInfo(inputMethod = 'method', callback = Callback, callbackQuery = Ca
   }
   info(command){
    
+
+
     // return this.renderMethodInfo(this.command);
     if(command == '--info'){
 
@@ -104,7 +106,7 @@ renderMethodInfo(inputMethod = 'method', callback = Callback, callbackQuery = Ca
   depending on how you want to view it. A single menu item is selected by type. A single item
   can also be selected by type by size by price or by type by toppings.
 
- ${create()}`;
+ ${native(this.command)}`;
       this.centered(`\x1b[32m MONGO TRANSFORM CLASS METHOD AND CLASS METHOD USAGE MANUAL\x1b[0m`);
       this.description(centered);
       this.verticalSpace(1);

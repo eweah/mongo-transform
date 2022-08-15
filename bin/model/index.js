@@ -15,7 +15,11 @@
  * @classdesc Model class
  */
 
-const { createReadStream, createWriteStream, promises } = require("fs");
+const { createReadStream, createWriteStream, promises} = require("fs");
+// const {mkdir} = promises
+const { resolve, join } = require('node:path');
+const MongoTransform = require('../../index')
+const modelDefinition  = require('../templates/model')
 
 class Model extends require("../base"){
   constructor(options = {}) {
@@ -37,6 +41,36 @@ class Model extends require("../base"){
 
   list(){
     console.log('list all models');
+  }
+  cmd(cmdCommand = 'User'){ return cmdCommand.endsWith('s') ? cmdCommand.toLowerCase(): `${cmdCommand}s`.toLocaleLowerCase()};
+  async make(command){
+
+    
+     let modeName = command.charAt(0).toUpperCase() + command.slice(1);
+     let collectionName = this.cmd(command);
+   
+  
+     
+
+    //  command = new MongoTransform({collection: this.cmd(command)});
+    // //  command.create({name: 'first command'});
+    // this.makeDirectory('../app', 'models').catch(console.error)
+    // // const readable = Model.from(`const Forum = new MongoTransform({collection: 'forums'});`);
+    // // const writable = this.createWriteStream(join(__dirname, '../../app', `models/${modeName}.js`))
+
+    // // const readable = Model.from(`const Forum = new MongoTransform({collection: 'forums'});`);
+    const writable = this.createWriteStream(join(__dirname, '../../app', `models/${modeName}.js`))
+    // writable.write(`const Forum = new MongoTransform({collection: 'forums'});\n`)
+    // writable.write(`module.exports = Forum;`);
+
+    writable.write(modelDefinition({model: modeName, collection: collectionName}))
+    
+    // readable.pipe(writable);
+
+    // console.log(modelDefinition(`const Forum = new MongoTransform({collection: 'forums'});\n`))
+    
+
+   
   }
 
   addDefault() {

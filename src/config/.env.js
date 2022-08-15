@@ -9,5 +9,5 @@
 */
 module.exports = () => ({
     DATABASE_NAME: 'mongo-transform',
-    DATABASE_URL: 'mongodb://localhost:27017',
+    DATABASE_URL: 'mongodb://localhost:27017/',
 })

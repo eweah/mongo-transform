@@ -188,6 +188,23 @@ class CLI extends require("./base") {
         case 'class':
             new MongoTransform({command: this.cmd2()}).mongoTransform();
             break;
+        case 'make:model':
+           if(this.cmd3()){
+            new Model({command: this.cmd2()}).make(this.cmd3());
+           }else{
+            console.log('make:model command');
+           }
+           
+            break;
+        case 'make:schema':
+            console.log('make:schema');
+            break;
+        case 'make:migration':
+            console.log('make:migration');
+            break;
+        case 'migrate':
+            console.log('migrate');
+            break;
         default: 
             this.errorNotification(this.cmd2());
             break;

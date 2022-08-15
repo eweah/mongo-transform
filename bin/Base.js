@@ -16,6 +16,9 @@
  */
 
 const { createReadStream, createWriteStream, promises } = require("fs");
+const {mkdir} = promises
+const { resolve, join } = require('node:path');
+const MongoTransform = require('../index')
 
 class Base extends require("stream").Transform {
   constructor(options = {}) {
@@ -33,6 +36,14 @@ class Base extends require("stream").Transform {
     // this.methodizer(..classList);
     //Set the maximum number of listeners to infinity
     this.setMaxListeners(Infinity);
+  }
+
+
+  async makeDirectory(absolutePath = '../app', directory = 'models') {
+    const projectFolder = join(__dirname, absolutePath, directory);
+    const dirCreation = await mkdir(projectFolder, { recursive: true });
+    console.log(dirCreation);
+    return dirCreation;
   }
 
   texAligner = (...args) => {

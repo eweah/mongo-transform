@@ -1,8 +1,12 @@
-const Callback = require('../../src/models/Callback');
-const CallbackQuery = require('../../src/models/CallbackQuery');
-const CallbackQueryValidator = require('../../src/models/CallbackQueryValidator');
+const Callback = require('../src/models/Callback.js');
+const CallbackQuery = require('../src/models/CallbackQuery');
+const CallbackQueryValidator = require('../src/models/CallbackQueryValidator');
 
-const findMethod = (method = 'method', ClassName) => Reflect.has(ClassName.prototype, method) ? Reflect.get(ClassName.prototype, method).toString(): undefined
+
+
+
+const getMethod = (method = 'method', ClassName) => Reflect.has(ClassName.prototype, method) ? Reflect.get(ClassName.prototype, method).toString(): undefined
+const findMethod = (method = 'method', ClassName) => ClassName.prototype[method] ? ClassName.prototype[method].toString() : undefined
 const findValidator = (method = 'method') => {
     let index = method.indexOf('.validate');
     let str = '';
@@ -70,10 +74,9 @@ const colorMethod = (inputMethod = 'method', callback = Callback, callbackQuery 
      methodString = methodString.replace(methodBodyString,`\x1b[36m${methodBodyString}\x1b[0m`)
      methodString = methodString.replace(validator, `\x1b[33m${validator}\x1b[0m`);
     methodString = methodString.replace(`${inputMethod}Callback`, `\x1b[32m${inputMethod}Callback\x1b[0m`);
-    return methodString;
-    // console.log('')
-    // console.log(methodString)
-    // console.log('----------------------------------------------------')
+    console.log('')
+    console.log(methodString)
+    console.log('----------------------------------------------------')
 }
 const colorMethodCallback = (inputMethod = 'method', callback = Callback, callbackQuery = CallbackQuery, callbackQueryValidator = CallbackQueryValidator) => {
     const methodCallback = findMethod(`${inputMethod}Callback`, callbackQuery);
@@ -81,9 +84,8 @@ const colorMethodCallback = (inputMethod = 'method', callback = Callback, callba
     const methodCallbackStringIndex = methodCallbackString.indexOf(`${inputMethod}Callback`) + `${inputMethod}Callback`.length;
     let slice2 = methodCallbackString.slice(methodCallbackStringIndex).slice(1).slice(1).slice(1).slice(1);
     methodCallbackString = methodCallbackString.replace(slice2, `\x1b[36m${slice2}\x1b[0m`)
-    return methodCallbackString;
-    // console.log(methodCallbackString);
-    // console.log('')
+    console.log(methodCallbackString);
+    console.log('')
 }
 const colorValidator = (inputMethod = 'method', callback = Callback, callbackQuery = CallbackQuery, callbackQueryValidator = CallbackQueryValidator) => {
     const method = findMethod(inputMethod, callback);
@@ -96,13 +98,25 @@ const colorValidator = (inputMethod = 'method', callback = Callback, callbackQue
     const methodValidatorStringIndex = methodValidatorString.indexOf(validator) + validator.length;
     let sliced = methodValidatorString.slice(methodValidatorStringIndex).slice(1).slice(1).slice(1).slice(1);
     methodValidatorString = methodValidatorString.replace(sliced, `\x1b[36m${sliced}\x1b[0m`)
-    // console.log(methodValidatorString);
-    return methodValidatorString;
+    console.log(methodValidatorString);
 }
-module.exports = (inputMethod = 'method', callback = Callback, callbackQuery = CallbackQuery, callbackQueryValidator = CallbackQueryValidator) => `
-${colorMethod(inputMethod, callback)}
--------------------------------------------------------------
+const methodInfo = (inputMethod = 'method', callback = Callback, callbackQuery = CallbackQuery, callbackQueryValidator = CallbackQueryValidator) => {
+    colorMethod(inputMethod);
+    colorMethodCallback(inputMethod);
+    colorValidator(inputMethod, callback);
+        
+        
+}
 
-${colorMethodCallback (inputMethod, callback, callbackQuery)} 
 
-${colorValidator(inputMethod, callback, callbackQuery, callbackQueryValidator)}`
+
+
+methodInfo('createMany');
+
+
+
+
+
+
+
+ 

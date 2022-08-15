@@ -1,0 +1,28 @@
+mongoTransform
+mongoTransform method 
+mongoTransform method -n <methodName> 
+mongoTransform method -n <methodName>  -i
+mongoTransform method -n <methodName>  --info 
+mongoTransform method --name <methodName>  
+mongoTransform method --name -i
+mongoTransform method --name <methodName>  --info
+
+mongoTransform make 
+mongoTransform make:model  <modelName>
+mongoTransform make:schema <schemaName>
+mongoTransform make:schema <schemaName> -v
+mongoTransform make:schema <schemaName> --validation
+mongoTransform make:migration <migrationName>
+mongoTransform migrate 
+
+
+mongoTransform database 
+mongoTransform collections 
+
+mongoTransform collection -n <collectionName>
+mongoTransform collection --name <collectionName>
+
+mongoTransform collection 
+mongoTransform collection -n <collectionName>
+mongoTransform collection --name <collectionName>
+
