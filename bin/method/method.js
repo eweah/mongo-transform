@@ -19,6 +19,9 @@ const { createReadStream, createWriteStream, promises } = require("fs");
 const {inspect} = require('util');
 const MongoTransform = require('../../index');
 const {create}  = require('./native')
+const Callback = require('../../src/models/Callback');
+const CallbackQuery = require('../../src/models/CallbackQuery');
+const CallbackQueryValidator = require('../../src/models/CallbackQueryValidator');
 
 class Method extends require("../base") {
   constructor(options = {}) {
@@ -40,6 +43,35 @@ class Method extends require("../base") {
   }
 
 
+ methodFinder (method = 'method', ClassName){
+  return Reflect.has(ClassName.prototype, method) ? Reflect.get(ClassName.prototype, method).toString(): undefined;
+ }
+ validatorFinder(method = 'method'){
+  if(!method || method == undefined) return;
+    let index = method.indexOf('.validate');
+    let str = '';
+    for(let i = index   ; i <  method.length; i++){
+        if(method[i] === '(') break;
+        str += method[i];
+    }
+    return str.slice(1)
+ }
+
+
+renderMethodInfo(inputMethod = 'method', callback = Callback, callbackQuery = CallbackQuery, callbackQueryValidator = CallbackQueryValidator){
+  const method = this.methodFinder(inputMethod, callback);
+  if(!method || method == undefined) return;
+  const validator  = this.validatorFinder(method)
+  const methodCallback =  this.methodFinder(`${inputMethod}Callback`, callbackQuery);
+  const methodValidator =  this.methodFinder(validator, callbackQueryValidator);
+  return `
+  ${method}
+  --------------------------------------------------------------------
+  ${methodCallback}
+  ${methodValidator}
+  `;
+}
+
 
   i(command){
     if(command ==  '-i'){
@@ -48,6 +80,8 @@ class Method extends require("../base") {
     }
   }
   info(command){
+   
+    // return this.renderMethodInfo(this.command);
     if(command == '--info'){
 
       console.clear();

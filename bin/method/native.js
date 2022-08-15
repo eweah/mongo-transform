@@ -22,7 +22,7 @@ exports.create = ()=> `\x1b[36m create(data = {}, collectionName = this.collecti
     
             this.emit("create", res);
     
-            db.close();
+            db.close();k
           };
           dbs.collection(collectionName).insertOne(data, cfn);
         };
