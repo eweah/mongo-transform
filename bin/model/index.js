@@ -44,7 +44,7 @@ class Model extends require("../base"){
     console.log('list all models');
   }
   cmd(cmdCommand = 'User'){ return cmdCommand.endsWith('s') ? cmdCommand.toLowerCase(): `${cmdCommand}s`.toLocaleLowerCase()};
-  
+
   path(path = '/mongo-transform/models'){return join(process.cwd(), path); }
   async addDirectory (path = this.path()) {
     if(!existsSync(path)){
@@ -64,19 +64,34 @@ class Model extends require("../base"){
       }
     });
   }
+  modelPath(command){
+    const paths = command.split('/');
+    paths.pop();
+    const modelPath = '/mongo-transform/models/'+paths.join('/');
+    return this.path(modelPath)
+  }
+  modelName(command) {
+    const paths = command.split('/');
+    const name = paths.pop();
+    return name.charAt(0).toUpperCase() + name.slice(1);
+
+  }
+  collectionName(command){
+    const paths = command.split('/');
+    const name = paths.pop();
+    return this.cmd(name);
+  }
   async make(command){
  
-   this.checkForInstallation();
-    await this.addDirectory();
-    const modelName = command.charAt(0).toUpperCase() + command.slice(1);
-    const collectionName = this.cmd(command);
-    if(!existsSync(join(this.path(), `${modelName}.js`))){
-      const writable = this.createWriteStream(join(this.path(), `${modelName}.js`));
-      writable.write(modelDefinition({model: modelName, collection: collectionName}));
+    this.checkForInstallation();
+    await this.addDirectory(this.modelPath(command));
+    if(!existsSync(join(this.modelPath(command), `${this.modelName(command)}.js`))){
+      const writable = this.createWriteStream(join(this.modelPath(command), `${this.modelName(command)}.js`));
+      writable.write(modelDefinition({model: this.modelName(command), collection: this.collectionName(command)}));
       writable.end('');
-      console.log(`\x1b[32m${modelName} model successfully created!\x1b[0m`);
+      console.log(`\x1b[32m${this.modelName(command)} model successfully created!\x1b[0m`);
     }else{
-      console.log(`\x1b[32m${modelName}\x1b[0m\x1b[31m model already exists!\x1b[0m`);
+      console.log(`\x1b[32m${this.modelName(command)}\x1b[0m\x1b[31m model already exists!\x1b[0m`);
     }
     
   }
