@@ -25,8 +25,8 @@ const methodInfo = (inputMethod = 'method', callback = Callback, callbackQuery =
         const methodCallback = findMethod(`${inputMethod}Callback`, callbackQuery);
         const methodValidator = findMethod(validator, callbackQueryValidator);
 
-        const methodValidatorString = methodValidator.replace(validator, `\x1b[33m${validator}\x1b[0m`);
-        const methodCallbackString = methodCallback.replace(`${inputMethod}Callback`, `\x1b[32m${inputMethod}Callback\x1b[0m` )
+        let methodValidatorString = methodValidator.replace(validator, `\x1b[33m${validator}\x1b[0m`);
+        let methodCallbackString = methodCallback.replace(`${inputMethod}Callback`, `\x1b[32m${inputMethod}Callback\x1b[0m` )
         // method string:
         let methodString = method;//`\x1b[36m${method}\x1b[0m`
         
@@ -61,11 +61,25 @@ const methodInfo = (inputMethod = 'method', callback = Callback, callbackQuery =
              }
              if(dotCount >= 3) break;
          }
-        //  methodBodyString = methodBodyString;
+         methodBodyString = methodBodyString;
          methodString = methodString.replace(methodBodyString,`\x1b[36m${methodBodyString}\x1b[0m`)
          methodString = methodString.replace(validator, `\x1b[33m${validator}\x1b[0m`);
         methodString = methodString.replace(`${inputMethod}Callback`, `\x1b[32m${inputMethod}Callback\x1b[0m`);
         console.log(methodString)
+
+
+        const methodCallbackStringIndex = methodCallbackString.indexOf(`${inputMethod}Callback`) + `${inputMethod}Callback`.length;
+        let slice2 = methodCallbackString.slice(methodCallbackStringIndex).slice(1).slice(1).slice(1).slice(1);
+        methodCallbackString = methodCallbackString.replace(slice2, `\x1b[36m${slice2}\x1b[0m`)
+        console.log(methodCallbackString);
+
+        const methodValidatorStringIndex = methodValidatorString.indexOf(validator) + validator.length;
+        let sliced = methodValidatorString.slice(methodValidatorStringIndex).slice(1).slice(1).slice(1).slice(1);
+        methodValidatorString = methodValidatorString.replace(sliced, `\x1b[36m${sliced}\x1b[0m`)
+        console.log(methodValidatorString);
+
+
+    
         //  methodString = methodString.replace(partialString, `\x1b[36m${partialString}\x1b[0m` )
          
         //  return `\x1b[36m${partialString}\x1b[0m`
@@ -107,7 +121,7 @@ const methodColoring = (string = 'string') => {
 }
 
 
-methodInfo('find');
+methodInfo('deleteMany');
 
 
 
