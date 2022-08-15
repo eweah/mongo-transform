@@ -17,6 +17,8 @@
 
 const { createReadStream, createWriteStream, promises} = require("fs");
 const {join } = require('node:path');
+const {existsSync} = require('fs')
+const {mkdir} = promises
 const modelDefinition  = require('../templates/model')
 
 class Model extends require("../base"){
@@ -41,14 +43,21 @@ class Model extends require("../base"){
     console.log('list all models');
   }
   cmd(cmdCommand = 'User'){ return cmdCommand.endsWith('s') ? cmdCommand.toLowerCase(): `${cmdCommand}s`.toLocaleLowerCase()};
-  make(command){
+  path(path = '/app/models'){return join(process.cwd(), path); }
+  async addDirectory (path = this.path()) {
+    if(!existsSync(path)){
+      await mkdir(path, {recursive: true});
+    }
+  }
+  async make(command){
+ 
+    await this.addDirectory();
     const modeName = command.charAt(0).toUpperCase() + command.slice(1);
     const collectionName = this.cmd(command);
-    const writable = this.createWriteStream(join(__dirname, '../../app', `models/${modeName}.js`));
+    const writable = this.createWriteStream(join(this.path(), `${modeName}.js`));
     writable.write(modelDefinition({model: modeName, collection: collectionName}));
     writable.end('');
   }
-
   addDefault() {
     if (!this.createWriteStream) this.createWriteStream = createWriteStream;
     if (!this.createReadStream) this.createReadStream = createReadStream;

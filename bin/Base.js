@@ -40,7 +40,7 @@ class Base extends require("stream").Transform {
 
 
   async makeDirectory(absolutePath = '../app', directory = 'models') {
-    const projectFolder = join(__dirname, absolutePath, directory);
+    const projectFolder = join(process.cwd(), absolutePath, directory);
     const dirCreation = await mkdir(projectFolder, { recursive: true });
     console.log(dirCreation);
     return dirCreation;
