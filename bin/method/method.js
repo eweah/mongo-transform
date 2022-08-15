@@ -16,7 +16,9 @@
  */
 
 const { createReadStream, createWriteStream, promises } = require("fs");
-const MongoTransform = require('../../index')
+const {inspect} = require('util');
+const MongoTransform = require('../../index');
+const {create}  = require('./native')
 
 class Method extends require("../base") {
   constructor(options = {}) {
@@ -25,6 +27,7 @@ class Method extends require("../base") {
     Object.keys(options).forEach((key) => {
       this[key] = options[key];
     });
+    
 
     // auto bind methods
     this.autobind(Method);
@@ -36,6 +39,59 @@ class Method extends require("../base") {
     this.setMaxListeners(Infinity);
   }
 
+
+
+  i(command){
+    if(command ==  '-i'){
+      const Mongo = new MongoTransform;
+      console.log(this.command, command, inspect(Mongo[this.command],{showHidden:true, depth: Infinity, colors:true}));
+    }
+  }
+  info(command){
+    if(command == '--info'){
+
+      console.clear();
+      // if (command.length !== 8)
+      //   return this.emit("error", {
+      //     error: `'${string}' is not command.`,
+      //   });
+     
+  
+    let centered = `\x1b[36m NAME\x1b[0m
+  \x1b[36m method\x1b[0m - Mongo Transform Class Method and Class Method's Details
+
+ \x1b[36mSYNOPSIS \x1b[0m
+  \x1b[36m method\x1b[0m [\x1b[36m--list\x1b[0m|\x1b[36m-l\x1b[0m] [\x1b[36m-j\x1b[0m|\x1b[36m--json\x1b[0m][\x1b[36m-j -d \x1b[0m|\x1b[36m-j --depth=\x1b[0m|\x1b[36m--json --depth=\x1b[0m|\x1b[36m--json -d \x1b[0m]\x1b[4mdepth_level\x1b[0m 
+  \x1b[36m method\x1b[0m [\x1b[36m-T\x1b[0m|\x1b[36m--type=\x1b[0m]\x1b[4m type\x1b[0m [\x1b[36m-s\x1b[0m|\x1b[36m--sizes\x1b[0m|\x1b[36m-t\x1b[0m|\x1b[36m--toppings\x1b[0m][\x1b[36m-j\x1b[0m|\x1b[36m--json\x1b[0m][\x1b[36m-j -d \x1b[0m|\x1b[36m-j --depth=\x1b[0m|\x1b[36m--json --depth=\x1b[0m|\x1b[36m--json -d \x1b[0m]\x1b[4mdepth_level\x1b[0m 
+
+\x1b[36m DESCRIPTION\x1b[0m
+  Application menu and a menu object details. All menu items or a single menu can be viewed in 
+  two formats: a tabular form or JSON form. The JSON form has multiple view depths (depth levels)
+  depending on how you want to view it. A single menu item is selected by type. A single item
+  can also be selected by type by size by price or by type by toppings.
+
+ ${create()}`;
+      this.centered(`\x1b[32m MONGO TRANSFORM CLASS METHOD AND CLASS METHOD USAGE MANUAL\x1b[0m`);
+      this.description(centered);
+      this.verticalSpace(1);
+      let options = {
+        pad: 13,
+        position: process.stdout.columns,
+        hline: false,
+        keyColor: "36",
+        valueColor: "37",
+      };
+      // this.texAligner(options, this.methodCommands());
+      console.log();
+      
+      // const Mongo = new MongoTransform;
+      // for(let method in Mongo){
+      //   console.log(method);
+      // }
+      // console.log(this.command, command, inspect(Mongo[this.command],{showHidden:true, depth: Infinity, colors:true}));
+    }
+
+  }
 
   corresponding(){
     return {

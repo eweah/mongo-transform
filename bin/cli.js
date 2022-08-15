@@ -79,7 +79,9 @@ class CLI extends require("./base") {
   invalidCommand(command = 'command') {
     return `
     ----------------------------------------------------
-    |${command}----------------------------------------------------`
+
+    |${command}
+    ----------------------------------------------------`
   } 
 
   errorNotification (command){
@@ -124,9 +126,6 @@ class CLI extends require("./base") {
     
     }
    
-
-   
-
   init(){
     switch(this.cmd2()){
         case 'h':
@@ -146,7 +145,21 @@ class CLI extends require("./base") {
                         break;
                     case '-n':
                         if(this.cmd4()){
-                            new Method({command: this.cmd3()}).n(this.cmd4());
+                            if(this.cmd5()){
+                              switch(this.cmd5()){
+                                case '-i':
+                                  new Method({command: this.cmd4()}).i(this.cmd5());
+                                  break;
+                                case '--info':
+                                  new Method({command: this.cmd4()}).info(this.cmd5());
+                                  break;
+                                default:
+                                  console.log(this.cmd5(), 'is not a valid option');
+                                  break;
+                              }
+                            }else{
+                              new Method({command: this.cmd3()}).n(this.cmd4());
+                            }
                         }else{
                             new Method({command: this.cmd3()}).n();
                         }
