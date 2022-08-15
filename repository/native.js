@@ -30,6 +30,16 @@ const colorMethodMethodBodyString = (methodString, inputMethod) => {
 
      return methodBodyString;
 }
+const colorMethodCallbackArgumentString = (methodString, inputMethod) => {
+    let callbackArgumentIndex = methodString.indexOf(`${inputMethod}Callback`) + `${inputMethod}Callback`.length;
+    let callbackArgumentString = '';
+    for(let i = callbackArgumentIndex; i < methodString.length; i++){
+        callbackArgumentString += methodString[i];
+        if(methodString[i] === '.') break;
+    }
+
+    return callbackArgumentString;
+}
  
 const colorMethod = (inputMethod = 'method', callback = Callback, callbackQuery = CallbackQuery, callbackQueryValidator = CallbackQueryValidator) => {
     const method = findMethod(inputMethod, callback);
@@ -38,16 +48,15 @@ const colorMethod = (inputMethod = 'method', callback = Callback, callbackQuery 
 
     let methodString = method;//`\x1b[36m${method}\x1b[0m`
         
-    let callbackArgumentIndex = methodString.indexOf(`${inputMethod}Callback`) + `${inputMethod}Callback`.length;
-     let callbackArgumentString = '';
-     for(let i = callbackArgumentIndex; i < methodString.length; i++){
-         callbackArgumentString += methodString[i];
-         if(methodString[i] === '.') break;
-     }
-    //  callbackArgumentString = callbackArgumentString;
+    // let callbackArgumentIndex = methodString.indexOf(`${inputMethod}Callback`) + `${inputMethod}Callback`.length;
+    //  let callbackArgumentString = '';
+    //  for(let i = callbackArgumentIndex; i < methodString.length; i++){
+    //      callbackArgumentString += methodString[i];
+    //      if(methodString[i] === '.') break;
+    //  }
+    let callbackArgumentString = colorMethodCallbackArgumentString(methodString, inputMethod);
 
      methodString = methodString.replace(callbackArgumentString,`\x1b[36m${callbackArgumentString}\x1b[0m`)
-
 
      let validatorArgumentIndex = methodString.indexOf(validator) + validator.length;
      let validatorArgumentString = '';
