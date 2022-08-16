@@ -192,13 +192,6 @@ class CLI extends require("./base") {
             break;
         case 'make:model':
            if(this.cmd3()){
-            // let path = join(process.cwd(), '/app');
-            // mkdir(join(process.cwd(), '/apps'), function(err){
-            //   if (err) {
-            //     return console.error(err);
-            //   }
-            //   console.log("Directory created successfully!");
-            // });
             new Model({command: this.cmd2()}).make(this.cmd3());
            }else{
             console.log('make:model command');

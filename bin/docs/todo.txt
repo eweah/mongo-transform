@@ -1,0 +1,5 @@
+1. create schema 
+2. create model 
+3. file upload 
+4. image upload 
+5. video upload 

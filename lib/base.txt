@@ -1,0 +1,5 @@
+1. shell command execution
+2. filesystem 
+3. api 
+4. net 
+5. cli 
