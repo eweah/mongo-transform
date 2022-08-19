@@ -120,7 +120,9 @@ class Schema extends require("../Base") {
 
                 for(let els in input[el]){
                     if(typeof(input[el][els]) === 'object' && Object.keys(el).length >= 2){
-                        return this.makeSchema(input[el][els], input[el][els].type, output);
+                        
+                        // return this.makeSchema(input[el]);
+                        
                     }else{
                         output['properties'][el]['properties'][els] = {bsonType: input[el][els].split('|')[0]};
                         if(input[el][els].includes('required')) output['properties'][el]['required'].push(els);
@@ -153,8 +155,8 @@ const users = {
         "userId": "number|minimum:100|validate:true",
         "body": "string|max_length:10|required",
         "user": {
-            "firstname": "string|required",
-            "lastname": "string",
+            "username": "string|required",
+            "email": "string",
             "age": "number|required|minimum:18|maximum:80"
         }
      }
