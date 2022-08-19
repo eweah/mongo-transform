@@ -16,14 +16,19 @@ module.exports = (option = {}) => `'use strict';
 const MongoTransform = require('mongo-transform');
 
  class ${option.model} extends MongoTransform{
-    constructor(options = {}){
+
+    constructor(...options){
         super({collection: '${option.collection}'});
-        Object.keys(options).forEach(key => {this[key] = options[key]});
+        options.forEach(option => {
+            if(Object.keys(option).length > 0){
+                Object.keys(option).forEach(key => {
+                    if(!this[key]) this[key] = option[key];
+                })
+            }
+        })
     }
  }
 
  module.exports = ${option.model};
-
-
 `
 

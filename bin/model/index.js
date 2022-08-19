@@ -18,7 +18,7 @@
 const { createReadStream, createWriteStream, promises} = require("fs");
 const {join } = require('node:path');
 const {existsSync} = require('fs')
-const {mkdir} = promises
+
 const { exec } = require('node:child_process');
 const modelDefinition  = require('../templates/model')
 
@@ -45,10 +45,10 @@ class Model extends require("../base"){
   }
   cmd(cmdCommand = 'User'){ return cmdCommand.endsWith('s') ? cmdCommand.toLowerCase(): `${cmdCommand}s`.toLocaleLowerCase()};
 
-  path(path = '/mongo-transform/models'){return join(process.cwd(), path); }
+  path(path = '/mongo-transform/models'){return require('path').join(process.cwd(), path); }
   async addDirectory (path = this.path()) {
     if(!existsSync(path)){
-      await mkdir(path, {recursive: true});
+      await require('fs').promises.mkdir(path, {recursive: true});
     }
   }
 

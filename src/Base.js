@@ -1,6 +1,7 @@
 "use strict";
+
 /**
- * @author Ericson S. Weah  <ericson.weah@gmail.com> <https://github.com/eweah>  <+1.801.671.7159>
+ * @author Ericson S. Weah  <ericson.weah@gmail.com> <https://github.com/eweah>  <+1.385.204.5167>
  *
  * @module Base
  * @kind class
@@ -16,9 +17,8 @@
 
 const { createReadStream, createWriteStream, promises } = require("fs");
 
-
 class Base extends require("stream").Transform {
-    constructor(options = {}) {
+  constructor(options = {}) {
     super({ objectMode: true, encoding: "utf-8", autoDestroy: true });
 
     Object.keys(options).forEach((key) => {
@@ -29,9 +29,9 @@ class Base extends require("stream").Transform {
     this.autobind(Base);
     // auto invoke methods
     this.autoinvoker(Base);
-    // add other classes method if methods do not already exists. Argument order matters!
-    this.methodizer( /**..classList */);
-    //Set maximum number of listeners to infinity
+    // add other classes method if methods do not already exist. Argument order matters!
+    // this.methodizer(..classList);
+    //Set the maximum number of listeners to infinity
     this.setMaxListeners(Infinity);
   }
 
@@ -43,6 +43,8 @@ class Base extends require("stream").Transform {
      * @param {Object} options Options provided to new stream.Readable([options]). By default, Readable.from() will set options.objectMode to true, unless this is explicitly opted out by setting options.objectMode to false.
      * 
      * @description creates readable streams out of iterators.
+
+
      * 
      * @return {Base}
      * 
@@ -110,7 +112,7 @@ class Base extends require("stream").Transform {
     for (let className of classNamesList) {
       for (let method of Object.getOwnPropertyNames(className.prototype)) {
         if (this[method] === undefined || !this[method]) {
-          if (typeof className.prototype[method] === "function" && className.prototype[method] !== "constructor") {
+          if (typeof className.prototype[method] === "function") {
             this[method] = className.prototype[method];
             // auto bind each method form className class to this
             this[method] = this[method].bind(this);
@@ -134,20 +136,18 @@ class Base extends require("stream").Transform {
 
   autoinvoker(className = {}) {
     for (let method of Object.getOwnPropertyNames(className.prototype)) {
-      if (typeof this[method] === "function" && method !== "constructor") {
-        this.autoinvoked().forEach((name) => {
-          if (method === name) {
-            this[method]();
-          }
-        });
-      }
+      this.autoinvoked().forEach((name) => {
+        if (method === name) {
+          this[method]();
+        }
+      });
     }
   }
 
   addDefault() {
     if (!this.createWriteStream) this.createWriteStream = createWriteStream;
     if (!this.createReadStream) this.createReadStream = createReadStream;
-    if (!this.promises) this.promises = promises;
+    if (!promises) this.promises = promises;
   }
   /**
    * @name autoinvoked
@@ -238,7 +238,7 @@ class Base extends require("stream").Transform {
 
      Implementors should not override this method but instead implement readable._destroy().
     *    
-    * @return {Base|this}
+    * @return Base
     * 
     */
 
@@ -300,7 +300,7 @@ class Base extends require("stream").Transform {
   
       The Readable stream will properly handle multi-byte characters delivered through the stream that would otherwise become improperly decoded if simply pulled from the stream as Buffer objects.
        *    
-       * @return {Base|this} The destination, allowing for a chain of pipes if it is a Duplex or a Transform stream
+       * @return Base The destination, allowing for a chain of pipes if it is a Duplex or a Transform stream
        * 
        */
 
@@ -319,11 +319,11 @@ class Base extends require("stream").Transform {
   
         If the destination is specified, but no pipe is set up for it, then the method does nothing.
        *    
-       * @return {Base|this} 
+       * @return Base 
        * 
        */
 
-  unpipe(destination) {}
+  unpipe(e) {}
 
   /**
        * @name unshift
@@ -342,7 +342,7 @@ class Base extends require("stream").Transform {
   
       Developers using stream.unshift() often should consider switching to the use of a Transform stream instead. See the API for stream implementers section for more information.
        *    
-       * @return {Base|this} 
+       * @return Base 
        * 
        */
 
@@ -361,7 +361,7 @@ class Base extends require("stream").Transform {
   
       It will rarely be necessary to use readable.wrap() but the method has been provided as a convenience for interacting with older Node.js applications and libraries.
        *    
-       * @return {Base|this} 
+       * @return Base 
        * 
        */
 
@@ -438,7 +438,7 @@ class Base extends require("stream").Transform {
       * 
       */
 
-  pipe(destination, options = { end: true }) {}
+  pipe(e, options = { end: true }) {}
 
   /**
       * @name unpipe
@@ -453,11 +453,11 @@ class Base extends require("stream").Transform {
  
        If the destination is specified, but no pipe is set up for it, then the method does nothing.
       *    
-      * @return {Base|this} 
+      * @return Base 
       * 
       */
 
-  unpipe(destination) {}
+  unpipe(e) {}
 
   /**
       * @name unshift
@@ -476,7 +476,7 @@ class Base extends require("stream").Transform {
  
      Developers using stream.unshift() often should consider switching to the use of a Transform stream instead. See the API for stream implementers section for more information.
       *    
-      * @return {Base|this} 
+      * @return Base 
       * 
       */
 
@@ -495,14 +495,14 @@ class Base extends require("stream").Transform {
  
      It will rarely be necessary to use readable.wrap() but the method has been provided as a convenience for interacting with older Node.js applications and libraries.
       *    
-      * @return {Base|this} 
+      * @return Base 
       * 
       */
 
   wrap(stream) {}
 
   /**
-      * @name _destory
+      * @name _destroy
       * @function
       * 
       * @param {Error} error A possible error..
@@ -522,13 +522,3 @@ class Base extends require("stream").Transform {
 }
 
 module.exports = Base;
-
-
-
-
-
-
-
-
-
-

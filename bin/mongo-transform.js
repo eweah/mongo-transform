@@ -18,14 +18,17 @@
 
  const Man = require('./man');
  const Method = require('./method/method');
- const Default = require('./default');
  const Event = require('./event');
  const MongoTransform = require('./MongoTransform');
  const Model = require('./model');
  const Database = require('./db');
+ const Schema = require('./schema');
+ const Migration = require('./migration');
+ const errorNotification = require('./notifications/errors');
  
  const { spawn } = require('node:child_process');
- const {join} = require('path')
+ const {join} = require('path');
+const ErrorNotification = require('./notifications/errors');
  
 
 class CLI extends require("./base") {
@@ -46,38 +49,7 @@ class CLI extends require("./base") {
     this.setMaxListeners(Infinity);
   }
 
-  cmd0() {
-    return process.argv[0];
-  }
-  cmd1() {
-    return process.argv[1];
-  }
-  cmd2() {
-    return process.argv[2];
-  }
-  cmd3() {
-    return process.argv[3];
-  }
-  cmd4() {
-    return process.argv[4];
-  }
-  cmd5() {
-    return process.argv[5];
-  }
-  cmd6() {
-    return process.argv[6];
-  }
-  cmd7() {
-    return process.argv[7];
-  }
-  cmd8() {
-    return process.argv[8];
-  }
-  cmd9() {
-    return process.argv[9];
-  }
-
- 
+  commands(index = 0){return process.argv[index];}
   invalidCommand(command = 'command') {
     return `
     ----------------------------------------------------
@@ -129,7 +101,7 @@ class CLI extends require("./base") {
     }
    
   init(){
-    switch(this.cmd2()){
+    switch(this.commands(2)){
         case 'h':
             console.log('Mongo Transform Help Page');
             break;
@@ -137,33 +109,33 @@ class CLI extends require("./base") {
             console.log('Mongo Transform Help Page');
             break;
         case 'man':
-            new Man({command: this.cmd2()}).man();
+            new Man({command: this.commands(2)}).man();
             break;
         case 'method':
-             if(this.cmd3()){
-                switch(this.cmd3()){
+             if(this.commands(3)){
+                switch(this.commands(3)){
                     case '--list':
-                        new Method({command: this.cmd3()}).list();
+                        new Method({command: this.commands(3)}).list();
                         break;
                     case '-n':
-                        if(this.cmd4()){
-                            if(this.cmd5()){
-                              switch(this.cmd5()){
+                        if(this.commands(4)){
+                            if(this.commands(5)){
+                              switch(this.commands(5)){
                                 case '-i':
-                                  new Method({command: this.cmd4()}).i(this.cmd5());
+                                  new Method({command: this.commands(4)}).i(this.commands(5));
                                   break;
                                 case '--info':
-                                  new Method({command: this.cmd4()}).info(this.cmd5());
+                                  new Method({command: this.commands(4)}).info(this.commands(5));
                                   break;
                                 default:
-                                  console.log(this.cmd5(), 'is not a valid option');
+                                  console.log(this.commands(5), 'is not a valid option');
                                   break;
                               }
                             }else{
-                              new Method({command: this.cmd3()}).n(this.cmd4());
+                              new Method({command: this.commands(3)}).n(this.commands(4));
                             }
                         }else{
-                            new Method({command: this.cmd3()}).n();
+                            new Method({command: this.commands(3)}).n();
                         }
                         break;
                     case '--name=':
@@ -174,41 +146,44 @@ class CLI extends require("./base") {
                         break;
                 }
              }else{
-                new Method({command: this.cmd2()}).method();
+                new Method({command: this.commands(2)}).method();
              }
             
             break;
         case 'events':
-             new Event({command: this.cmd2()}).events();
+             new Event({command: this.commands(2)}).events();
             break;
         case 'model':
-            new Model({command: this.cmd2()}).list();
+            new Model({command: this.commands(2)}).list();
             break;
         case 'database':
-            new Database({command: this.cmd2()}).database();
+            new Database({command: this.commands(2)}).database();
             break;
         case 'class':
-            new MongoTransform({command: this.cmd2()}).mongoTransform();
+            new MongoTransform({command: this.commands(2)}).mongoTransform();
             break;
         case 'make:model':
-           if(this.cmd3()){
-            new Model({command: this.cmd2()}).make(this.cmd3());
+           if(this.commands(3)){
+            new Model({command: this.commands(2)}).make(this.commands(3));
            }else{
             console.log('make:model command');
            }
            
             break;
         case 'make:schema':
-            console.log('make:schema');
+            const {makeSchema} = new Schema({command: this.commands(2)});
+            makeSchema(this.commands(2));
             break;
         case 'make:migration':
-            console.log('make:migration');
+            const {makeMigration} = new Migration({command: this.commands(2)});
+            makeMigration(this.commands(2));
             break;
         case 'migrate':
             console.log('migrate');
             break;
         default: 
-            this.errorNotification(this.cmd2());
+            const {simpleNotification} = new ErrorNotification({command: this.commands(2)});
+            simpleNotification(this.commands(2));
             break;
     }
     

@@ -14,7 +14,7 @@
  * @requires AsyncAwait
  * @requires Callback
  * @requires CallbackQuery
- * @requires  CallbackQueryValidator
+ * @requires CallbackQueryValidator
  * @requires MongoClient
  *
  * @classdesc Mongo class
