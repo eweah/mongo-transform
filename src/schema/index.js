@@ -63,11 +63,10 @@ class Schema extends require("../Base") {
     return string;
     
   }
-
-
-    makeSchema(input = {}, type = 'object', output = {}){
+    makeSchema(name = 'User', input = {}, type = 'object', output = {}){
         if(typeof(input) !== 'object') return `${input} must be on object`;
         if(Object.keys(output).length == 0){
+            output['title'] = name;
             output['bsonType'] = type;
             output['required'] = [];
             output['properties'] = {};
@@ -158,4 +157,4 @@ const users = {
 
 const {makeSchema} = new Schema
 
-console.log(makeSchema(users))
+console.log(makeSchema('Post',users))

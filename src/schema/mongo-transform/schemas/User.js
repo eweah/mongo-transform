@@ -1,4 +1,4 @@
-module.exports = (option = {}) => `'use strict';
+'use strict';
 /*
 |--------------------------------------------------------------------------
 | Http Exception Handler
@@ -16,7 +16,5 @@ module.exports = (option = {}) => `'use strict';
 const Schema  = require('../../src/schema');
 const {makeSchema}  = new Schema;
  module.exports = makeSchema({
-   "title": "${option.title}",
- },"${option.type}") ;
-`
-
+   "title": "User",
+ },"object") ;

@@ -164,15 +164,30 @@ class CLI extends require("./base") {
             break;
         case 'make:model':
            if(this.commands(3)){
-            new Model({command: this.commands(2)}).make(this.commands(3));
+            const  {make} =  new Model({command: this.commands(2)})
+            make(this.commands(3));
            }else{
             console.log('make:model command');
            }
            
             break;
         case 'make:schema':
-            const {makeSchema} = new Schema({command: this.commands(2)});
-            makeSchema(this.commands(2));
+          if(this.commands(3)){
+            const  {makeSchema, hasType} =  new Schema({command: this.commands(2)})
+            if(this.commands(4)){
+                if(hasType(this.commands(4))){
+                  makeSchema(this.commands(3), this.commands(4));
+                }else{
+                  console.log(`invalid argument for make:schema ${this.commands(3)}`);
+                }
+              
+            }else{
+              makeSchema(this.commands(3));
+            }
+        
+           }else{
+            console.log('make:schema command');
+           }
             break;
         case 'make:migration':
             const {makeMigration} = new Migration({command: this.commands(2)});

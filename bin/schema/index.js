@@ -16,6 +16,12 @@
 
 const { createReadStream, createWriteStream, promises } = require("fs");
 
+const {join } = require('node:path');
+const {existsSync} = require('fs')
+
+const { exec } = require('node:child_process');
+const schemaDefinition  = require('../templates/schema')
+
 class Schema extends require("../base") {
   constructor(options = {}) {
     super({ objectMode: true, encoding: "utf-8", autoDestroy: true });
@@ -32,6 +38,85 @@ class Schema extends require("../base") {
     // this.methodizer(..classList);
     //Set the maximum number of listeners to infinity
     this.setMaxListeners(Infinity);
+  }
+
+  types() {
+    return [
+      'double', 'string', 'object', 'array', 'objectId', 'data', 'bool',
+      'null', 'regex', 'int', 'timestamp', 'long', 'decimal', 'uuid', 'bindData',
+      'mixed'
+    ]
+  }
+
+
+
+  cmd(cmdCommand = 'User'){ return cmdCommand.endsWith('s') ? cmdCommand.toLowerCase(): `${cmdCommand}s`.toLocaleLowerCase()};
+
+  path(path = '/mongo-transform/schemas'){return require('path').join(process.cwd(), path); }
+  async addDirectory (path = this.path()) {
+    if(!existsSync(path)){
+      await require('fs').promises.mkdir(path, {recursive: true});
+    }
+  }
+
+  checkForInstallation(){
+    exec('npm list mongo-transform', (error, stdout, stderr) => {
+      if (error) {
+        exec('npm link mongo-transform', (err, sto, sdi) => {
+            if(err) return error
+            if(sto){
+                console.log(sto)
+            }
+        })
+      }
+    });
+  }
+  modelPath(command){
+    const paths = command.split('/');
+    paths.pop();
+    const modelPath = '/mongo-transform/schemas/'+paths.join('/');
+    return this.path(modelPath)
+  }
+  modelName(command) {
+    const paths = command.split('/');
+    const name = paths.pop();
+    return name.charAt(0).toUpperCase() + name.slice(1);
+
+  }
+  collectionName(command){
+    const paths = command.split('/');
+    const name = paths.pop();
+    return this.cmd(name);
+  }
+  hasType(type = 'object') {
+    if(type.startsWith('--type=')){
+      if(this.types().includes(type.split('=')[1])){
+        return true;
+      }else{
+        return false;
+      }
+    } 
+  }
+
+  schemaType(type = '--type=object') {
+    return this.hasType(type) ? type.split('=')[1]: 'object';
+  }
+
+  async makeSchema(command, type = 'object'){
+
+    if(this.hasType){
+      this.checkForInstallation();
+      await this.addDirectory(this.modelPath(command));
+      if(!existsSync(join(this.modelPath(command), `${this.modelName(command)}.js`))){
+        const writable = this.createWriteStream(join(this.modelPath(command), `${this.modelName(command)}.js`));
+        writable.write(schemaDefinition({title: this.modelName(command), type: this.schemaType(type) }));
+        writable.end('');
+        console.log(`\x1b[32m${this.modelName(command)} schema successfully created!\x1b[0m`);
+      }else{
+        console.log(`\x1b[32m${this.modelName(command)}\x1b[0m\x1b[31m schema already exists!\x1b[0m`);
+      }
+    }
+    // return console.log('command make:schema', command)
   }
 
 
@@ -55,9 +140,9 @@ class Schema extends require("../base") {
   autoinvoked() {
     return ["addDefault"];
   }
-  makeSchema(command){
-    console.log(command);
-  }
+  // makeSchema(command){
+  //   console.log(command);
+  // }
 
 }
 
