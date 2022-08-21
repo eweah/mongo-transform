@@ -86,7 +86,7 @@ class Migrate extends require("../base") {
     return this.cmd(name);
   }
 
-  onCreateCollection (namespace) {
+  onCreateCollection (namespace,model) {
     const {collection} = namespace
     let firstIndex = Array.from(collection).findIndex(str => str == ':');
     let secondIndex = Array.from(collection).findIndex(str => str == ',');
@@ -99,7 +99,7 @@ class Migrate extends require("../base") {
     return console.log(`\x1b[32m${string} migration successfully created!\x1b[0m`);
 }
 
-onCreateCollectionError (error) {
+onCreateCollectionError (error, model) {
 
     const {message} = error;
     let firstIndex = Array.from(message).findIndex(str => str == ':');
@@ -125,12 +125,14 @@ onCreateCollectionError (error) {
                 // return console.log(schema);
                 mongo.createCollection(schema);
                
+                mongo.removeListener('createCollection',this.onCreateCollection)
                 if(mongo.listenerCount('createCollection') > 1){
                     mongo.removeListener('createCollection',this.onCreateCollection)
                 }else{
                     mongo.on('createCollection', this.onCreateCollection)
                 }
                
+                mongo.removeListener('createCollection-error',this.onCreateCollectionError)
                 if(mongo.listenerCount('createCollection-error') > 1){
                     mongo.removeListener('createCollection-error',this.onCreateCollectionError)
                 }else{
