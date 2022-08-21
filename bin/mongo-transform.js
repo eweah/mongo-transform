@@ -190,8 +190,20 @@ class CLI extends require("./base") {
            }
             break;
         case 'make:migration':
-            const {makeMigration} = new Migration({command: this.commands(2)});
-            makeMigration(this.commands(2));
+          // return console.log(this.commands(3), this.commands(4))
+          if(this.commands(3)){
+            const {makeMigration} = new Migration({command: this.commands(3)})
+            if(this.commands(4)){
+             makeMigration(this.commands(3), this.commands(4));
+            }else{
+              makeMigration(this.commands(3));
+            }
+           
+          }else{
+            console.log(`command missing argument: --schema=<Schema Name>`);
+          }
+            // const {makeMigration} = new Migration({command: this.commands(2)});
+            // makeMigration(this.commands(2));
             break;
         case 'migrate':
             console.log('migrate');

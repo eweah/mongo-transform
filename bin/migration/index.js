@@ -15,6 +15,11 @@
  */
 
 const { createReadStream, createWriteStream, promises } = require("fs");
+const {join } = require('node:path');
+const {existsSync} = require('fs')
+
+const { exec } = require('node:child_process');
+const schemaDefinition  = require('../templates/schema')
 
 class Migration extends require("../base") {
   constructor(options = {}) {
@@ -33,6 +38,100 @@ class Migration extends require("../base") {
     //Set the maximum number of listeners to infinity
     this.setMaxListeners(Infinity);
   }
+
+  types() {
+    return [
+      'double', 'string', 'object', 'array', 'objectId', 'data', 'bool',
+      'null', 'regex', 'int', 'timestamp', 'long', 'decimal', 'uuid', 'bindData',
+      'mixed'
+    ]
+  }
+  cmd(cmdCommand = 'User'){ return cmdCommand.endsWith('s') ? cmdCommand.toLowerCase(): `${cmdCommand}s`.toLocaleLowerCase()};
+
+  path(path = '/mongo-transform/schemas'){return require('path').join(process.cwd(), path); }
+  async addDirectory (path = this.path()) {
+    if(!existsSync(path)){
+      await require('fs').promises.mkdir(path, {recursive: true});
+    }
+  }
+
+  checkForInstallation(){
+    exec('npm list mongo-transform', (error, stdout, stderr) => {
+      if (error) {
+        exec('npm link mongo-transform', (err, sto, sdi) => {
+            if(err) return error
+            if(sto){
+                console.log(sto)
+            }
+        })
+      }
+    });
+  }
+  modelPath(command){
+    const paths = command.split('/');
+    paths.pop();
+    const modelPath = '/mongo-transform/schemas/'+paths.join('/');
+    return this.path(modelPath)
+  }
+  modelName(command) {
+    const paths = command.split('/');
+    const name = paths.pop();
+    return name.charAt(0).toUpperCase() + name.slice(1);
+
+  }
+  collectionName(command){
+    const paths = command.split('/');
+    const name = paths.pop();
+    return this.cmd(name);
+  }
+  hasType(type = 'object') {
+    if(type.startsWith('--type=')){
+      if(this.types().includes(type.split('=')[1])){
+        return true;
+      }else{
+        return false;
+      }
+    } 
+  }
+
+  isSchemaNameValid(name = 'User') {
+    if(name.startsWith('--schema=')){
+      if(name.trim().length <= '--schema='.length) return false;
+      return true;
+    }else{
+      return false;
+    }
+  }
+  schemaName(name = 'User') {
+    if(name.startsWith('--schema=')){
+      name = name.split('=')[1].trim();
+      if(name.length  === 0) return false;
+      return name;
+    }
+    return false
+  }
+
+  schemaType(type = '--type=object') {
+    return this.hasType(type) ? type.split('=')[1]: 'object';
+  }
+
+  async makeMigration(command, type = 'object'){
+    if(this.hasType && this.isSchemaNameValid(command)){
+      this.checkForInstallation();
+      await this.addDirectory(this.modelPath(command));
+      if(!existsSync(join(this.modelPath(command), `${this.modelName(this.schemaName(command))}.js`))){
+        const writable = this.createWriteStream(join(this.modelPath(command), `${this.modelName(this.schemaName(command))}.js`));
+        writable.write(schemaDefinition({title: this.modelName(this.schemaName(command)), type: this.schemaType(type) }));
+        writable.end('');
+        console.log(`\x1b[32m${this.modelName(this.schemaName(command))} schema successfully created!\x1b[0m`);
+      }else{
+        console.log(`\x1b[32m${this.modelName(this.schemaName(command))}\x1b[0m\x1b[31m schema already exists!\x1b[0m`);
+      }
+    }
+    // return console.log('command make:schema', command)
+  }
+
+
 
 
   addDefault() {
@@ -56,9 +155,7 @@ class Migration extends require("../base") {
     return ["addDefault"];
   }
 
-  makeMigration(command){
-    console.log(command);
-  }
+
 
 }
 
