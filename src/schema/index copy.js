@@ -63,9 +63,124 @@ class Schema extends require("../Base") {
     return string;
     
   }
+  objectSchemaType() {}
+//   createSchema(input = {}, type="object", output = {}){
+//     output['bsonType'] = type;
+//     output['required'] = [];
+//     output['properties'] = {};
+//     for(let el in input){
+//         if(typeof(input[el]) === 'object' && Object.keys(el).length >= 2) {
+//             this.createSchema(input[el], type="object", output);
+//             console.log('object');
+//         }else{
+//             console.log('non object');
+           
+//         }
+       
+//     }
+
+//     if(input[el].includes('required')) output['required'].push(el);
+//     output['properties'][el] = {bsonType: input[el].split('|')[0]};
+//     for(let element of input[el].split('|')){
+//         if(element !== 'required'){
+//             if(element.includes(':')){
+//                 let check = element.split(':');
+//                 output['properties'][el][check[0]] = this.convertType(check[1]);
+//             }
+//         }
+//     }
+//     if(output.required && output.required.length == 0) delete output.required;
+//     return output;
+//   }
+
+    makeSchema(input = {}, type = 'object', output = {}) {
+        if(Object.keys(output).length == 0){
+            output['bsonType'] = type;
+            output['required'] = [];
+            output['properties'] = {};
+        }
+        for(let el in input){
+            if(typeof(input[el]) !== 'object' ) {
+                if(input[el].includes('required')) output['required'].push(el);
+                output['properties'][el] = {bsonType: input[el].split('|')[0]};
+                for(let element of input[el].split('|')){
+                    if(element !== 'required'){
+                        if(element.includes(':')){
+                            let check = element.split(':');
+                            output['properties'][el][check[0]] = this.convertType(check[1]);
+                        }
+                    }
+                }
+            }
+            if(typeof(input[el]) === 'object' && Object.keys(el).length >= 2){
+                output['properties'][el] = {}
+                output['properties'][el]['bsonType'] = type;
+                output['properties'][el]['required'] = [];
+                output['properties'][el]['properties'] = {};
 
 
-    makeSchema(input = {}, type = 'object', output = {}){
+                for(let els in input[el]){
+                    // if(typeof(input[el][els]) === 'object' && Object.keys(el).length >= 2){
+                        
+                    //     // return this.makeSchema(input[el]);
+                        
+                    // }else{
+                    //     output['properties'][el]['properties'][els] = {bsonType: input[el][els].split('|')[0]};
+                    //     if(input[el][els].includes('required')) output['properties'][el]['required'].push(els);
+                    //     for(let elemental of input[el][els].split('|')){
+                    //         // return console.log(input[el][els])
+                    //         if(elemental !== 'required'){
+                    //             if(elemental.includes(':')){
+                    //                 let check = elemental.split(':');
+                    //                 output['properties'][el]['properties'][els][check[0]] = this.convertType(check[1]);
+                    //             }
+                    //         }
+                    //     }
+                    // }
+                    if(typeof(input[el][els]) !== 'object'){
+                        output['properties'][el]['properties'][els] = {bsonType: input[el][els].split('|')[0]};
+                        if(input[el][els].includes('required')) output['properties'][el]['required'].push(els);
+                        for(let elemental of input[el][els].split('|')){
+                            // return console.log(input[el][els])
+                            if(elemental !== 'required'){
+                                if(elemental.includes(':')){
+                                    let check = elemental.split(':');
+                                    output['properties'][el]['properties'][els][check[0]] = this.convertType(check[1]);
+                                }
+                            }
+                        }
+                    }else{
+                        console.log(require('util').inspect(output, {showHidden: true, depth: Infinity, colors: true}))
+                    }
+                }
+                // return this.makeSchema(input[el], input[el].type, output);
+            }
+        }
+        return require('util').inspect(output, {showHidden: true, depth: Infinity, colors: true});
+    }
+
+    // createSchema(input = {}, type = 'object', output = {}){
+    //     if(typeof(input) !== 'object') return `${input} must be on object`;
+
+    //     if(Object.keys(output).length == 0){
+    //         output['bsonType'] = type;
+    //         output['required'] = [];
+    //         output['properties'] = {};
+    //     }
+        
+    //     for(let key of Object.keys(input)){
+    //         if(typeof(input[key]) === 'string'){
+    //             if(input[key].includes('required')) output['required'].push(key);
+    //             output['properties'][key] = {bsonType: input[key].split('|')[0]};
+    //             // output[key] = input[key];
+    //         }else if(typeof(input[key]) ===  'object'){
+    //             // createSchema(input[key], 'object', output)
+    //         }
+    //     }
+    //     return output;
+    // }
+
+    createSchema(input = {}, type = 'object', output = {}){
         if(typeof(input) !== 'object') return `${input} must be on object`;
         if(Object.keys(output).length == 0){
             output['bsonType'] = type;
@@ -149,13 +264,13 @@ const users = {
         "userId": "number|minimum:100|validate:true",
         "body": "string|max_length:10|required",
         "user": {
-            "username": "string|required|min:2|max:10",
+            "username": "string",
             "email": "string|email:true",
             "age": "number|required|minimum:18|maximum:80",
         }
      }
 }
 
-const {makeSchema} = new Schema
+const {makeSchema, createSchema} = new Schema
 
-console.log(makeSchema(users))
+console.log(createSchema(users))
