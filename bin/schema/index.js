@@ -109,7 +109,7 @@ class Schema extends require("../base") {
       await this.addDirectory(this.modelPath(command));
       if(!existsSync(join(this.modelPath(command), `${this.modelName(command)}.js`))){
         const writable = this.createWriteStream(join(this.modelPath(command), `${this.modelName(command)}.js`));
-        writable.write(schemaDefinition({title: this.modelName(command), type: this.schemaType(type) }));
+        writable.write(schemaDefinition({name: this.cmd(this.modelName(command)), type: this.schemaType(type) }));
         writable.end('');
         console.log(`\x1b[32m${this.modelName(command)} schema successfully created!\x1b[0m`);
       }else{

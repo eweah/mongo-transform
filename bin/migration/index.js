@@ -116,12 +116,13 @@ class Migration extends require("../base") {
   }
 
   async makeMigration(command, type = 'object'){
+    // return console.log(this.modelPath(this.schemaName(command)));
     if(this.hasType && this.isSchemaNameValid(command)){
       this.checkForInstallation();
-      await this.addDirectory(this.modelPath(command));
-      if(!existsSync(join(this.modelPath(command), `${this.modelName(this.schemaName(command))}.js`))){
-        const writable = this.createWriteStream(join(this.modelPath(command), `${this.modelName(this.schemaName(command))}.js`));
-        writable.write(schemaDefinition({title: this.modelName(this.schemaName(command)), type: this.schemaType(type) }));
+      await this.addDirectory(this.modelPath(this.schemaName(command)));
+      if(!existsSync(join(this.modelPath(this.schemaName(command)), `${this.modelName(this.schemaName(command))}.js`))){
+        const writable = this.createWriteStream(join(this.modelPath(this.schemaName(command)), `${this.modelName(this.schemaName(command))}.js`));
+        writable.write(schemaDefinition({name: this.cmd(this.modelName(this.schemaName(command))), type: this.schemaType(type), options: {} }));
         writable.end('');
         console.log(`\x1b[32m${this.modelName(this.schemaName(command))} schema successfully created!\x1b[0m`);
       }else{

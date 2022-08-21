@@ -17,10 +17,10 @@ const Schema  = require('../../src/schema');
 
 const {makeSchema}  = new Schema;
 
- module.exports = makeSchema({
-  "title": "${option.title}",
+ module.exports = makeSchema("${option.name}",{
 
-
- },"${option.type}") ;
+  "property": "string|min:2|max:10",
+  
+ }, "${option.type}") ;
 `
 

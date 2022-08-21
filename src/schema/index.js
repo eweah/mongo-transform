@@ -64,7 +64,7 @@ class Schema extends require("../Base") {
     
   }
     makeSchema(name = 'User', input = {}, type = 'object', output = {}){
-        if(typeof(input) !== 'object') return `${input} must be on object`;
+        // if(typeof(input) !== 'object') return `${input} must be on object ...`;
         if(Object.keys(output).length == 0){
             output['title'] = name;
             output['bsonType'] = type;
@@ -86,7 +86,7 @@ class Schema extends require("../Base") {
             }
             if(typeof(input[key]) ===  'object'){
                 output['properties'][key] = {}
-                output['properties'][key]['bsonType'] = type;
+                output['properties'][key]['bsonType'] = 'object';
                 output['properties'][key]['required'] = [];
                 output['properties'][key]['properties'] = {};
                 for(let el of Object.keys(input[key])){
@@ -139,22 +139,32 @@ class Schema extends require("../Base") {
 }
 
 module.exports = Schema;
-const users = {
-    "firstname": "string|required",
-    "age": "number|minimum:13.5|exclusiveMinimum:true|required",
-    "_id": "objectId",
-     "posts": {
-        "title": "string",
-        "userId": "number|minimum:100|validate:true",
-        "body": "string|max_length:10|required",
-        "user": {
-            "username": "string|required|min:2|max:10",
-            "email": "string|email:true",
-            "age": "number|required|minimum:18|maximum:80",
-        }
-     }
-}
+// const users = {
+//     "firstname": "string|required",
+//     "age": "number|minimum:13.5|exclusiveMinimum:true|required",
+//     "_id": "objectId",
+//      "posts": {
+//         "title": "string",
+//         "userId": "number|minimum:100|validate:true",
+//         "body": "string|max_length:10|required",
+//         "user": {
+//             "username": "string|required|min:2|max:10",
+//             "email": "string|email:true",
+//             "age": "number|required|minimum:18|maximum:80",
+//         }
+//      }
+// }
 
-const {makeSchema} = new Schema
+// const {makeSchema} = new Schema
 
-console.log(makeSchema('Post',users))
+// // return console.log(makeSchema('User', users))
+
+
+// const user  =  makeSchema('User', {
+//     "firstname": "string",
+//     "lastname": "string"
+//     // <property>: <property data type>
+  
+//    },"array") ;
+
+//    console.log(user);

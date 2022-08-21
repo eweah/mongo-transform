@@ -24,6 +24,7 @@
  const Database = require('./db');
  const Schema = require('./schema');
  const Migration = require('./migration');
+ const Migrate  = require('./migration/migrate')
  const errorNotification = require('./notifications/errors');
  
  const { spawn } = require('node:child_process');
@@ -206,7 +207,8 @@ class CLI extends require("./base") {
             // makeMigration(this.commands(2));
             break;
         case 'migrate':
-            console.log('migrate');
+            const {migrate} = new Migrate({command: this.commands(2)})
+            migrate()
             break;
         default: 
             const {simpleNotification} = new ErrorNotification({command: this.commands(2)});
