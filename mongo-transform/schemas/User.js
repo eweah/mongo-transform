@@ -19,6 +19,6 @@ const {makeSchema}  = new Schema;
 
  module.exports = makeSchema("users",{
 
-  "property": "string|min:2|max:10",
-  
+  property: "string|min:2|max:10",
+
  }, "object") ;

@@ -19,8 +19,8 @@ const {makeSchema}  = new Schema;
 
  module.exports = makeSchema("${option.name}",{
 
-  "property": "string|min:2|max:10",
-  
+  property: "string|min:2|max:10",
+
  }, "${option.type}") ;
 `
 
