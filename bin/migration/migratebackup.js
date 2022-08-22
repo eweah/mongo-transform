@@ -131,7 +131,31 @@ schemaPath(command){
     }
 }
 filePath (base = './mongo-transform', path =  './') {return join(base, path)} 
+// async hasSchema(command, path = this.path()){
+//     try{
+//         let files = await promises.readdir(path);
+//         if(files){
+//             const mongo = new MongoTransform
+//             for(const file of files){
+//               if((await promises.lstat(join(this.path(), file))).isFile()){
+//                 if(join(this.path(), file) == this.schemaPath(command)){
+//                     return this.emit('hasSchema', {result: true})
+//                 }
+//               }
+//               if((await promises.lstat(join(this.path(), file))).isDirectory()){
+//                 // return this.hasSchema(command, join(this.path(), file))
+//                     // return this.migrate(join(this.path(), file), results);
+//                     // files = await promises.readdir(join(this.path(), file));
+//                     // this.migrate();
+//               }
+//             }
 
+//         return this.emit('hasSchema', {result: false})
+//         }
+//     }catch(error){
+//         this.emit('hasSchema-error', error)
+//     }
+//   }
 
 
 async hasSchema(command, path = this.path()){
@@ -165,7 +189,7 @@ async hasSchema(command, path = this.path()){
 // filePath(base = '../../mongo-transform/schemas/', path = './'){return require('path').join(base, path); }
 
 async getFiles (command, path) {
-
+    // return console.log(join(process.cwd(), '/mongo-transform/schemas/'));
     try{
         const files = await promises.readdir(this.filePath(path));
         if(files){
@@ -193,47 +217,39 @@ async getFiles (command, path) {
         this.emit('getFiles-error', error)
     }
 }
-async migrateSchema(command, path = './mongo-transform/schemas'){
-
-    try{
-        const files = await promises.readdir(this.filePath(path));
-        for(let file of files){
+migrateSchema(command){
+    this.getFiles(command);
+    this.once('getFiles', data => {
+        if(data.result){
+            const schema = require(this.schemaPath(command))
             const mongo = new MongoTransform
-            let string = '';
-            if((await promises.lstat(join(this.filePath(path), file))).isFile()){
-              if(command){
-                if(existsSync(this.schemaPath(command)+'.js')){
-                    string = '../../'+this.schemaPath(command)+'.js', file
-                    const schema = require(`${string}`);
-                    mongo.createCollection(schema);
-                    mongo.removeListener('createCollection',this.onCreateCollection)
-                    if(mongo.listenerCount('createCollection') > 1){
-                        mongo.removeListener('createCollection',this.onCreateCollection)
-                    }else{
-                        mongo.once('createCollection', this.onCreateCollection)
-                    }
-                    mongo.removeListener('createCollection-error',this.onCreateCollectionError)
-                    if(mongo.listenerCount('createCollection-error') > 1){
-                        mongo.removeListener('createCollection-error',this.onCreateCollectionError)
-                    }else{
-                        mongo.once('createCollection-error', this.onCreateCollectionError)
-                    }
-                    return;
-                }
-               
-              }
+            // return console.log(schema);
+            mongo.createCollection(schema);
+            mongo.removeListener('createCollection',this.onCreateCollection)
+            if(mongo.listenerCount('createCollection') > 1){
+                mongo.removeListener('createCollection',this.onCreateCollection)
+            }else{
+                mongo.on('createCollection', this.onCreateCollection)
             }
-            if((await promises.lstat(join(this.filePath(path), file))).isDirectory()){
-              return this.migrateSchema(command,join(this.filePath(path), file))
-               
+            mongo.removeListener('createCollection-error',this.onCreateCollectionError)
+            if(mongo.listenerCount('createCollection-error') > 1){
+                mongo.removeListener('createCollection-error',this.onCreateCollectionError)
+            }else{
+                mongo.on('createCollection-error', this.onCreateCollectionError)
             }
+        }else{
+            //return console.log(`\x1b[31m This migration does not exists!\x1b[0m`); 
         }
-    }catch(error){
-        console.log(error)
-    }
+    })
+    this.once('getFiles-error', error => {
+        return console.log(`\x1b[31m This migration does not exists!\x1b[0m`); 
+    })
+
 }
 
-
+migrationPaths(paths){
+    return console.log(paths)
+}
 schemaPath(command){
     return join(this.modelPath(this.schemaName(command)), `${this.modelName(this.schemaName(command))}`).split('/mongo-transform/')[1]
   }
@@ -271,7 +287,49 @@ async migrateAll(command, path = './mongo-transform/schemas'){
     }
 
 }
+  async migrate(){
+    try{
+        let files = await promises.readdir(this.path());
+        if(files){
+            const mongo = new MongoTransform
+            for(const file of files){
+              if((await promises.lstat(join(this.path(), file))).isFile()){
+                let schema = require(join(this.path(), file))
 
+                // return console.log(schema);
+                mongo.createCollection(schema);
+               
+                mongo.removeListener('createCollection',this.onCreateCollection)
+                if(mongo.listenerCount('createCollection') > 1){
+                    mongo.removeListener('createCollection',this.onCreateCollection)
+                }else{
+                    mongo.on('createCollection', this.onCreateCollection)
+                }
+               
+                mongo.removeListener('createCollection-error',this.onCreateCollectionError)
+                if(mongo.listenerCount('createCollection-error') > 1){
+                    mongo.removeListener('createCollection-error',this.onCreateCollectionError)
+                }else{
+                    mongo.on('createCollection-error', this.onCreateCollectionError)
+                }
+                
+              }
+              if((await promises.lstat(join(this.path(), file))).isDirectory()){
+                    // return this.migrate(join(this.path(), file), results);
+                    // files = await promises.readdir(join(this.path(), file));
+                    // this.migrate();
+              }
+            }
+
+           
+        }
+
+
+      
+    }catch(error){
+        console.log(error)
+    }
+  }
 
   addDefault() {
     if (!this.createWriteStream) this.createWriteStream = createWriteStream;
