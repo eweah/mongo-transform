@@ -207,8 +207,19 @@ class CLI extends require("./base") {
             // makeMigration(this.commands(2));
             break;
         case 'migrate':
-            const {migrate} = new Migrate({command: this.commands(2)})
-            migrate()
+          const {migrate, migrateSchema, migrateAll} = new Migrate({command: this.commands(2)})
+          if(this.commands(3)){
+            if(this.commands(3).startsWith('--schema=')){
+              migrateSchema(this.commands(3))
+            }else{
+              console.log(`invalid argument. Must be like --schema=<Schema Name>`);
+            }
+     
+          }else{
+            // migrate()
+            migrateAll(this.commands(2))
+          }
+           
             break;
         default: 
             const {simpleNotification} = new ErrorNotification({command: this.commands(2)});

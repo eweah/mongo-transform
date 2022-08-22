@@ -110,19 +110,32 @@ class Migration extends require("../base") {
     }
     return false
   }
-
+ 
+schemaPath(command){
+  return join(this.modelPath(this.schemaName(command)), `${this.modelName(this.schemaName(command))}`).split('/mongo-transform/')[1].split('mongo-transform/schemas/').join('')
+}
   schemaType(type = '--type=object') {
     return this.hasType(type) ? type.split('=')[1]: 'object';
   }
 
+  requireSchemaPath(command){
+    let scPath = `../`;
+    for(let i = 0; i < this.schemaPath(command).split('/').length; i++){
+       scPath += '../';
+    }
+     scPath += 'src/schema'
+     return  scPath
+  }
   async makeMigration(command, type = 'object'){
+  
+    //  console.log(scPath); 
     // return console.log(this.modelPath(this.schemaName(command)));
     if(this.hasType && this.isSchemaNameValid(command)){
       this.checkForInstallation();
       await this.addDirectory(this.modelPath(this.schemaName(command)));
       if(!existsSync(join(this.modelPath(this.schemaName(command)), `${this.modelName(this.schemaName(command))}.js`))){
         const writable = this.createWriteStream(join(this.modelPath(this.schemaName(command)), `${this.modelName(this.schemaName(command))}.js`));
-        writable.write(schemaDefinition({name: this.cmd(this.modelName(this.schemaName(command))), type: this.schemaType(type), options: {} }));
+        writable.write(schemaDefinition({name: this.cmd(this.modelName(this.schemaName(command))), type: this.schemaType(type), options: {}, path: this.requireSchemaPath(command) }));
         writable.end('');
         console.log(`\x1b[32m${this.modelName(this.schemaName(command))} schema successfully created!\x1b[0m`);
       }else{

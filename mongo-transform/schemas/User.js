@@ -14,6 +14,7 @@
 |
 */
 const Schema  = require('../../src/schema');
+//const Schema  = require('../../src/schema');
 
 const {makeSchema}  = new Schema;
 
